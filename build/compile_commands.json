@@ -1,0 +1,22 @@
+[
+{
+  "directory": "C:/work/git/gee/build",
+  "command": "C:\\work\\mingw\\bin\\g++.exe   -g -o CMakeFiles\\genchess.dir\\game.cpp.obj -c C:\\work\\git\\gee\\game.cpp",
+  "file": "C:/work/git/gee/game.cpp"
+},
+{
+  "directory": "C:/work/git/gee/build",
+  "command": "C:\\work\\mingw\\bin\\g++.exe   -g -o CMakeFiles\\genchess.dir\\main.cpp.obj -c C:\\work\\git\\gee\\main.cpp",
+  "file": "C:/work/git/gee/main.cpp"
+},
+{
+  "directory": "C:/work/git/gee/build",
+  "command": "C:\\work\\mingw\\bin\\g++.exe   -g -o CMakeFiles\\genchess.dir\\move.cpp.obj -c C:\\work\\git\\gee\\move.cpp",
+  "file": "C:/work/git/gee/move.cpp"
+},
+{
+  "directory": "C:/work/git/gee/build",
+  "command": "C:\\work\\mingw\\bin\\g++.exe   -g -o CMakeFiles\\genchess.dir\\position.cpp.obj -c C:\\work\\git\\gee\\position.cpp",
+  "file": "C:/work/git/gee/position.cpp"
+}
+]

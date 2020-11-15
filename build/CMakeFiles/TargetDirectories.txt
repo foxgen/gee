@@ -1,0 +1,3 @@
+C:/work/git/gee/build/CMakeFiles/genchess.dir
+C:/work/git/gee/build/CMakeFiles/edit_cache.dir
+C:/work/git/gee/build/CMakeFiles/rebuild_cache.dir
