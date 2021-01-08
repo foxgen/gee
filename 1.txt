@@ -1,0 +1,68 @@
+On branch main
+Your branch is up to date with 'origin/main'.
+
+Changes not staged for commit:
+  (use "git add/rm <file>..." to update what will be committed)
+  (use "git restore <file>..." to discard changes in working directory)
+	modified:   CMakeLists.txt
+	deleted:    build/.cmake/api/v1/query/client-integration-vscode/cache-v2
+	deleted:    build/.cmake/api/v1/query/client-integration-vscode/cmakeFiles-v1
+	deleted:    build/.cmake/api/v1/query/client-integration-vscode/codemodel-v2
+	deleted:    build/.cmake/api/v1/query/client-vscode/query.json
+	deleted:    build/.cmake/api/v1/reply/cache-v2-5afb64a204ff753eabf9.json
+	deleted:    build/.cmake/api/v1/reply/cmakeFiles-v1-29c71cc61c39ceba8807.json
+	deleted:    build/.cmake/api/v1/reply/codemodel-v2-600b05197a4af80d5566.json
+	deleted:    build/.cmake/api/v1/reply/index-2020-11-08T10-03-44-0042.json
+	deleted:    build/.cmake/api/v1/reply/target-genchess-Debug-300d13bf0bd870204d98.json
+	deleted:    build/CMakeCache.txt
+	deleted:    build/CMakeFiles/3.18.1/CMakeCCompiler.cmake
+	deleted:    build/CMakeFiles/3.18.1/CMakeCXXCompiler.cmake
+	deleted:    build/CMakeFiles/3.18.1/CMakeDetermineCompilerABI_C.bin
+	deleted:    build/CMakeFiles/3.18.1/CMakeDetermineCompilerABI_CXX.bin
+	deleted:    build/CMakeFiles/3.18.1/CMakeRCCompiler.cmake
+	deleted:    build/CMakeFiles/3.18.1/CMakeSystem.cmake
+	deleted:    build/CMakeFiles/3.18.1/CompilerIdC/CMakeCCompilerId.c
+	deleted:    build/CMakeFiles/3.18.1/CompilerIdC/a.exe
+	deleted:    build/CMakeFiles/3.18.1/CompilerIdCXX/CMakeCXXCompilerId.cpp
+	deleted:    build/CMakeFiles/3.18.1/CompilerIdCXX/a.exe
+	deleted:    build/CMakeFiles/CMakeDirectoryInformation.cmake
+	deleted:    build/CMakeFiles/CMakeOutput.log
+	deleted:    build/CMakeFiles/Makefile.cmake
+	deleted:    build/CMakeFiles/Makefile2
+	deleted:    build/CMakeFiles/TargetDirectories.txt
+	deleted:    build/CMakeFiles/cmake.check_cache
+	deleted:    build/CMakeFiles/genchess.dir/CXX.includecache
+	deleted:    build/CMakeFiles/genchess.dir/DependInfo.cmake
+	deleted:    build/CMakeFiles/genchess.dir/build.make
+	deleted:    build/CMakeFiles/genchess.dir/cmake_clean.cmake
+	deleted:    build/CMakeFiles/genchess.dir/depend.internal
+	deleted:    build/CMakeFiles/genchess.dir/depend.make
+	deleted:    build/CMakeFiles/genchess.dir/flags.make
+	deleted:    build/CMakeFiles/genchess.dir/game.cpp.obj
+	deleted:    build/CMakeFiles/genchess.dir/link.txt
+	deleted:    build/CMakeFiles/genchess.dir/linklibs.rsp
+	deleted:    build/CMakeFiles/genchess.dir/main.cpp.obj
+	deleted:    build/CMakeFiles/genchess.dir/move.cpp.obj
+	deleted:    build/CMakeFiles/genchess.dir/objects.a
+	deleted:    build/CMakeFiles/genchess.dir/objects1.rsp
+	deleted:    build/CMakeFiles/genchess.dir/position.cpp.obj
+	deleted:    build/CMakeFiles/genchess.dir/progress.make
+	deleted:    build/CMakeFiles/progress.marks
+	deleted:    build/Makefile
+	deleted:    build/cmake_install.cmake
+	deleted:    build/compile_commands.json
+	deleted:    build/genchess.exe
+	modified:   main.cpp
+	modified:   move.cpp
+	modified:   position.cpp
+	modified:   position.h
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+	.gitignore
+	.vscode/launch.json
+	.vscode/tasks.json
+	1.txt
+	test.cpp
+
+no changes added to commit (use "git add" and/or "git commit -a")

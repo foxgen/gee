@@ -178,6 +178,9 @@ std::vector<Move> KingMoves(Square s, const Position& pos)
     ProcessMove(SQ_LEFT(s));
     ProcessMove(SQ_RIGHT(s));
 
+    Square kingRookSq = (baseColor == WHITE) ? SQ_H1 : SQ_H8;
+    Square queenRookSq = (baseColor == WHITE) ? SQ_A1 : SQ_A8;
+
     // Castling    
     if ( (baseColor == WHITE && pos.m_whiteCastleKing) ||
          (baseColor == BLACK && pos.m_blackCastleKing) )  

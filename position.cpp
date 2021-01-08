@@ -129,7 +129,6 @@ void Position::PrintBoard()
 // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
 void Position::Set(const std::string& fen)
 {   
-    printf ("set board\n");
     const std::string figures = "rnbqkRNBQKpP";
 
     std::vector<std::string> tokens = split(fen, " ");
@@ -143,7 +142,7 @@ void Position::Set(const std::string& fen)
         m_sideToMove = BLACK;
     else 
     {
-        printf("fen error\n");
+        std::cout << "fen error\n";
         return;
     }
     // Castling    
@@ -197,17 +196,11 @@ void Position::Set(const std::string& fen)
                 }
             }
         }
-    }    
-
-    printf ("set board done\n");
-
-    PrintBoard();
+    }
 }
 
 std::string Position::fen() const
 {
-    printf("convert to fen\n");
-
     std::vector<std::string> tokens;    
 
     std::string board = "";
@@ -230,7 +223,6 @@ std::string Position::fen() const
     std::string passantSQ = "-";
     if (m_passantSQ != SQ_MAX)
         passantSQ = SquareToString(m_passantSQ);
-
 
     // board
     for (int r=8; r; r--)
@@ -296,7 +288,7 @@ void Position::ClearSquare(Square s)
     m_board[s] = NO_PIECE;
 }
 
-bool Position::ApplyMove(Move& move)
+bool Position::ApplyMove(Move&& move)
 {
     Piece p = m_board[move.m_from];
     switch(move.m_type)
@@ -330,17 +322,22 @@ bool Position::ApplyMove(Move& move)
             {
                 srcRookSq = (GetColor(p) == WHITE) ? SQ_H1 : SQ_H8;
                 dstRookSq = (GetColor(p) == WHITE) ? SQ_F1 : SQ_F8;
-                dstKingSq = (GetColor(p) == WHITE) ? SQ_G1 : SQ_G8;
+                dstKingSq = (GetColor(p) == WHITE) ? SQ_G1 : SQ_G8;                
             }
             else // if (move.m_castlingSide == QUEEN_SIDE)
             {                
                 srcRookSq = (GetColor(p) == WHITE) ? SQ_A1 : SQ_A8;
                 dstRookSq = (GetColor(p) == WHITE) ? SQ_D1 : SQ_D8;
-                dstKingSq = (GetColor(p) == WHITE) ? SQ_C1 : SQ_C8;
+                dstKingSq = (GetColor(p) == WHITE) ? SQ_C1 : SQ_C8;                
             }
 
+            if (GetColor(p) == WHITE)
+                m_whiteCastleKing = m_whiteCastleQueen = false;
+            else
+                m_blackCastleKing = m_blackCastleQueen = false;
+
             MovePiece(p, move.m_from, dstKingSq);
-            MovePiece(rook, srcRookSq, dstRookSq);
+            MovePiece(rook, srcRookSq, dstRookSq);            
             
             return true;
         }

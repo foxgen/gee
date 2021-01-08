@@ -16,7 +16,7 @@ public:
     void Set(const std::string& fen);
     Piece GetPiece(Square s) const;
 
-    bool ApplyMove(Move& move);
+    bool ApplyMove(Move&& move);
 
     void PutPiece(Piece pc, Square s);
     void ClearSquare(Square s);

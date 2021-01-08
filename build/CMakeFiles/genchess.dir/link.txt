@@ -1,3 +1,0 @@
-"C:\Program Files\CMake\bin\cmake.exe" -E rm -f CMakeFiles\genchess.dir/objects.a
-C:\work\mingw\bin\ar.exe cr CMakeFiles\genchess.dir/objects.a @CMakeFiles\genchess.dir\objects1.rsp
-C:\work\mingw\bin\g++.exe -g -Wl,--whole-archive CMakeFiles\genchess.dir/objects.a -Wl,--no-whole-archive -o genchess.exe -Wl,--out-implib,libgenchess.dll.a -Wl,--major-image-version,0,--minor-image-version,0 @CMakeFiles\genchess.dir\linklibs.rsp
