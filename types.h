@@ -77,15 +77,6 @@ static inline PieceType GetPieceType(Piece p)
   return static_cast<PieceType>(p & ~8);
 }
 
-inline Color GetPieceColor(Piece p)
-{
-  if (p > NO_PIECE && p < B_PAWN)
-    return WHITE;
-  else if ( p > W_KING && p < PIECE_NB)
-    return BLACK;
-  return NO_COLOR;  
-};
-
 inline Piece MakePiece(PieceType t, Color c)
 {
   int applyCol = (c == BLACK) ? 8 : 0;

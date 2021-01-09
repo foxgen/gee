@@ -3,20 +3,14 @@
 #include <sstream>
 #include "position.h"
 #include "move.h"
+#include "game.h"
 
 #include <vector>
 #include <string>
 
-class Game
-{
-public:
-
-    Position m_position;
-};
-
-
 int main(int argc, char *argv[])
-{   
+{
+    Game game;    
 
     while (true)
     {
@@ -61,19 +55,21 @@ int main(int argc, char *argv[])
 
         if (cmd == "position")
         {
+            // position startpos moves e2e4 e7e5 g1f3
+            // position 
             //__asm int 3
-            Position p;
-
-
-
+            std::string fen;
+            
+            iss >> fen;
         }
 
         if (cmd == "go")
         {
+
         }
 
         if (cmd == "stop")
-        {
+        {            
         }
 
         if (cmd == "ponderhit")

@@ -253,7 +253,7 @@ std::vector<Move> PawnMoves(Square s, const Position& pos)
     if (sq != SQ_MAX )
     {
         p = pos.GetPiece(sq);
-        if (GetPieceColor(p) == SwitchColor(baseColor))
+        if (GetColor(p) == SwitchColor(baseColor))
         {
             if (isPreLastLine)
             {
@@ -278,7 +278,7 @@ std::vector<Move> PawnMoves(Square s, const Position& pos)
     if (sq != SQ_MAX )
     {
         p = pos.GetPiece(sq);
-        if (GetPieceColor(p) == SwitchColor(baseColor))
+        if (GetColor(p) == SwitchColor(baseColor))
         {
             if (isPreLastLine)
             {

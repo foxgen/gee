@@ -5,11 +5,6 @@
 #include "move.h"
 #include <vector>
 
-std::vector<Move> GetMoves(const Position& position)
-{
-    return std::vector<Move>();
-}
-
 class Game
 {
 public:
@@ -23,9 +18,10 @@ public:
     int m_searchMateIn;
     int m_moveTime; // msec
 
-
     int     go();
     int     stop();
     int     position(const std::string& fen);
     int     uci();
+
+    std::vector<Move> GetAllMoves();
 };

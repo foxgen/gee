@@ -1,14 +1,11 @@
 #include <algorithm>
 #include <string>
+#include <vector>
 #include <iostream>
 #include <sstream>
-#include "position.h"
-#include "move.h"
+#include "game.h"
 
-#include <vector>
-#include <string>
 #include <gtest/gtest.h>
-
 
 TEST(FenTest, MovesPiecesTest)
 {	
@@ -280,4 +277,15 @@ TEST(PawnMoves, testE2)
 	std::sort(m2.begin(), m2.end());
 
 	EXPECT_EQ(m1, m2);
+}
+
+TEST(AllMoves, test)
+{
+	Position pos;
+	
+	pos.Set("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
+
+	std::vector<Move> moves = GetMoves(pos);
+	
+	EXPECT_EQ(moves.size(), 30);
 }
