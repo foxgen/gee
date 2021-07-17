@@ -4,6 +4,9 @@
 #include "position.h"
 #include "move.h"
 #include <vector>
+#include <condition_variable>
+#include <mutex>
+#include <atomic>
 
 class Game
 {
@@ -20,8 +23,18 @@ public:
 
     int     go();
     int     stop();
+    int     newgame(const std::string& fen);
     int     position(const std::string& fen);
+    std::string bestmove();    
     int     uci();
 
-    std::vector<Move> GetAllMoves();
+    std::vector<Move> GetAllMoves(Bitboard& underAttack);
+
+    std::vector<Move> m_gameMoves;
+    Bitboard m_underAttack;
+
+public:
+    std::condition_variable m_cv;
+    std::mutex m_lock;
+    std::atomic<bool> m_thinking;
 };

@@ -27,7 +27,6 @@ enum MoveType {
   CASTLING  = 3 << 14
 };
 
-
 enum Square {
   SQ_A1=0, SQ_B1, SQ_C1, SQ_D1, SQ_E1, SQ_F1, SQ_G1, SQ_H1,
   SQ_A2, SQ_B2, SQ_C2, SQ_D2, SQ_E2, SQ_F2, SQ_G2, SQ_H2,
@@ -94,3 +93,7 @@ inline Color GetColor(Piece p)
 }
 
 typedef uint64_t Bitboard;
+inline void SetUnderAttack(Bitboard& bb, Square sq)
+{
+  bb |= (1 << sq);      
+}

@@ -123,11 +123,12 @@ TEST(MovesTest, RightTests)
 TEST(RookMoves, testE2)
 {
 	Position pos;
+	Bitboard bb;
 
 	// Rook on E2
 	pos.Set("8/8/8/8/8/8/4R3/8 w - - 0 1");
 
-	std::vector<Move> moves = RookMoves(StringToSquare("e2"), pos);	
+	std::vector<Move> moves = RookMoves(StringToSquare("e2"), pos, bb);	
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -150,11 +151,13 @@ TEST(RookMoves, testE2)
 TEST(BishopMoves, testE2)
 {
 	Position pos;
+	Bitboard bb;
+
 
 	// Rook on E2
 	pos.Set("8/8/8/8/8/8/4B3/8 w - - 0 1");
 
-	std::vector<Move> moves = BishopMoves(StringToSquare("e2"), pos);	
+	std::vector<Move> moves = BishopMoves(StringToSquare("e2"), pos, bb);
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -176,11 +179,12 @@ TEST(BishopMoves, testE2)
 TEST(KnightMoves, testE2)
 {
 	Position pos;
+	Bitboard bb;
 
 	// Rook on E2
 	pos.Set("8/8/8/8/8/8/4N3/8 w - - 0 1");
 
-	std::vector<Move> moves = KnightMoves(StringToSquare("e2"), pos);	
+	std::vector<Move> moves = KnightMoves(StringToSquare("e2"), pos, bb);
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -202,11 +206,12 @@ TEST(KnightMoves, testE2)
 TEST(QueenMoves, testE2)
 {
 	Position pos;
+	Bitboard bb;
 
 	// Rook on E2
 	pos.Set("8/8/8/8/8/8/4Q3/8 w - - 0 1");
 
-	std::vector<Move> moves = QueenMoves(StringToSquare("e2"), pos);	
+	std::vector<Move> moves = QueenMoves(StringToSquare("e2"), pos, bb);
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -230,11 +235,12 @@ TEST(QueenMoves, testE2)
 TEST(KingMoves, testE2)
 {
 	Position pos;
+	Bitboard bb;
 
 	// Rook on E2
 	pos.Set("8/8/8/8/8/8/4K3/8 w - - 0 1");
 
-	std::vector<Move> moves = KingMoves(StringToSquare("e2"), pos);	
+	std::vector<Move> moves = KingMoves(StringToSquare("e2"), pos, bb);
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -244,7 +250,7 @@ TEST(KingMoves, testE2)
 		m1.push_back(m.m_to);
 	}
 
-	for (auto m : {"d1", "e1", "f1", "d2", "f2", "d3", "e3", "f3"})	
+	for (auto m : {"d1", "e1", "f1", "d2", "f2", "d3", "e3", "f3"})
 		m2.push_back(StringToSquare(m));
 
 	std::sort(m1.begin(), m1.end());
@@ -256,11 +262,12 @@ TEST(KingMoves, testE2)
 TEST(PawnMoves, testE2)
 {
 	Position pos;
+	Bitboard bb;
 
 	// Rook on E2
 	pos.Set("8/8/8/8/8/8/4P3/8 w - - 0 1");
 
-	std::vector<Move> moves = PawnMoves(StringToSquare("e2"), pos);	
+	std::vector<Move> moves = PawnMoves(StringToSquare("e2"), pos, bb);	
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -281,11 +288,27 @@ TEST(PawnMoves, testE2)
 
 TEST(AllMoves, test)
 {
-	Position pos;
+	Game g;	
+	Bitboard bb;
 	
-	pos.Set("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
+	g.position("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
 
-	std::vector<Move> moves = GetMoves(pos);
+	std::vector<Move> moves = g.GetAllMoves(bb);
 	
 	EXPECT_EQ(moves.size(), 30);
+}
+
+TEST(MovesConversion, MovesConversion)
+{
+	Move m(NORMAL, SQ_E2, SQ_E4);
+	Move m1 = m,
+		 m2;
+
+	std::cout << m.to_string() << std::endl;
+	EXPECT_EQ(m.to_string(), "e2e4");
+
+	std::string movestr = "e2e4";
+	m1.from_string(movestr);
+	EXPECT_TRUE(m1 == m);	
+	
 }

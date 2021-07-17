@@ -5,31 +5,6 @@
 #include <iostream>
 #include <sstream>
 
-std::vector<std::string> 
-split(const std::string& str, const std::string& delim){
-    std::vector<std::string> result;
-    if (str.empty())
-        throw std::runtime_error("Can not tokenize an empty string!");
-    std::string::const_iterator begin, str_it;
-    begin = str_it = str.begin(); 
-    do {
-        while (str_it != str.end() && delim.find(*str_it) == std::string::npos)
-            str_it++; // find the position of the first delimiter in str
-
-        std::string token = std::string(begin, str_it); // grab the token
-
-        if (!token.empty()) // empty token only when str starts with a delimiter
-            result.push_back(token); // push the token into a vector<string>
-
-        while (str_it != str.end() && delim.find(*str_it) != std::string::npos)
-            str_it++; // ignore the additional consecutive delimiters
-
-        begin = str_it; // process the remaining tokens
-    } while (str_it != str.end());
-
-    return result;
-}
-
 bool isCharPiece(const char c)
 {
     const std::string figures = "rnbqkRNBQKpP";
@@ -135,14 +110,14 @@ void Position::Set(const std::string& fen)
     std::vector<std::string> raws = split(tokens[0], "/");
 
     // side to move
-    std::cout << "side to move " << tokens[1].c_str() << std::endl;
+    GetLogger() << "side to move " << tokens[1].c_str() << std::endl;
     if (tokens[1] == "w")
         m_sideToMove = WHITE;
     else if( tokens[1] == "b" )
         m_sideToMove = BLACK;
     else 
     {
-        std::cout << "fen error\n";
+        GetLogger() << "fen error\n";
         return;
     }
     // Castling    
@@ -160,7 +135,7 @@ void Position::Set(const std::string& fen)
     // fullMoveNumber
     m_fullMoveNumber = atoi(tokens[5].c_str());
 
-    std::cout << "board " << tokens[0].c_str() << std::endl;
+    GetLogger() << "board " << tokens[0].c_str() << std::endl;
     // board
     int vertical = 0;
     int horizontal = 0;

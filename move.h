@@ -7,6 +7,7 @@
 class Move
 {
 public:
+    Move() {};
     Move(Square from, Square to)
         : m_from(from), m_to(to) {};
     Move(MoveType t, Square from, Square to)
@@ -23,6 +24,18 @@ public:
 
     Piece       m_newFigure{NO_PIECE};
     CastlingSide m_castlingSide{KING_SIDE};
+
+    bool operator == (const Move& that)
+    {
+        return m_type == that.m_type &&
+                m_from == that.m_from &&
+                m_to == that.m_to &&
+                m_newFigure == that.m_newFigure &&
+                m_castlingSide == that.m_castlingSide;
+    }
+
+    std::string to_string();
+    void from_string(const std::string& movestr);
 
     int m_score;
 };
@@ -51,9 +64,9 @@ static std::ostream& operator << (std::ostream& os, const Move& move)
     return os;
 }
 
-std::vector<Move> RookMoves(Square s, const Position& pos);
-std::vector<Move> BishopMoves(Square s, const Position& pos);
-std::vector<Move> QueenMoves(Square s, const Position& pos);
-std::vector<Move> KnightMoves(Square s, const Position& pos);
-std::vector<Move> KingMoves(Square s, const Position& pos);
-std::vector<Move> PawnMoves(Square s, const Position& pos);
+std::vector<Move> RookMoves(Square s, const Position& pos, Bitboard& underAttack);
+std::vector<Move> BishopMoves(Square s, const Position& pos, Bitboard& underAttack);
+std::vector<Move> QueenMoves(Square s, const Position& pos, Bitboard& underAttack);
+std::vector<Move> KnightMoves(Square s, const Position& pos, Bitboard& underAttack);
+std::vector<Move> KingMoves(Square s, const Position& pos, Bitboard& underAttack);
+std::vector<Move> PawnMoves(Square s, const Position& pos, Bitboard& underAttack);

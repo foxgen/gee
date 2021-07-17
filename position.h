@@ -1,6 +1,7 @@
 #pragma once
 #include "types.h"
 #include <string>
+#include "util.h"
 
 class Move;
 

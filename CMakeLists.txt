@@ -9,6 +9,8 @@ add_library(genchesslib
 	move.h
 	position.cpp
 	position.h
+	util.cpp
+	util.h
 	types.h
 )
 
@@ -25,8 +27,18 @@ add_dependencies(genchess genchesslib)
 add_executable(test
 	test.cpp
 )
+
+target_include_directories(test PUBLIC
+	../googletest/googletest/include
+)
+
+target_link_directories(test PRIVATE
+	../googletest/build/lib
+)
+
 target_link_libraries(test
 	genchesslib
-	-lgtest -lgtest_main
+	-lgtest 
+	-lgtest_main
 )
 add_dependencies(test genchesslib)
