@@ -19,8 +19,8 @@ public:
         : m_type(CASTLING), m_from(from), m_castlingSide(side) {};
 
     MoveType    m_type{NORMAL};
-    Square      m_from;
-    Square      m_to;
+    Square      m_from{SQ_MAX};
+    Square      m_to{SQ_MAX};
 
     PieceType   m_newFigure{NO_PIECE_TYPE};
     CastlingSide m_castlingSide{KING_SIDE};
@@ -35,7 +35,7 @@ public:
     }
 
     std::string to_string();
-    void from_string(const std::string& movestr);
+    void from_string(const std::string& movestr, const Position& pos);
 
     int m_score;
 };
@@ -76,5 +76,5 @@ std::vector<Move> BishopMoves(Square s, const Position& pos);
 std::vector<Move> QueenMoves(Square s, const Position& pos);
 std::vector<Move> KnightMoves(Square s, const Position& pos);
 std::vector<Move> KingMoves(Square s, const Position& pos);
-std::vector<Move> KingCastleMoves(Square s, const Position& pos);
+std::vector<Move> CastleMoves(Color side, const Position& pos);
 std::vector<Move> PawnMoves(Square s, const Position& pos);

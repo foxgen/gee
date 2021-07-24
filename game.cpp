@@ -15,7 +15,7 @@ int Game::go()
 {
     GetLogger() << "go\n";
     std::unique_lock<std::mutex> lock(m_lock);
-    m_cv.wait_for(lock, std::chrono::seconds(1), [&](){ return m_thinking == false;});
+    m_cv.wait_for(lock, std::chrono::milliseconds(1), [&](){ return m_thinking == false;});
     
     return 0;
 }
@@ -136,14 +136,11 @@ std::vector<Move> Game::GetAllMoves(Color side)
                 break;
             }
             moves.insert(moves.end(), m.begin(), m.end());
-
-            if (type == KING)
-            {
-                m = KingCastleMoves(sq, m_currentPosition);
-                moves.insert(moves.end(), m.begin(), m.end());
-            }
         }
     }
+
+    m = CastleMoves(side, m_currentPosition);
+    moves.insert(moves.end(), m.begin(), m.end());
 
     GetLogger() << "Got " << moves.size() << " moves\n";
     for (auto m : moves)

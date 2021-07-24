@@ -31,12 +31,14 @@ std::string Move::to_string()
     return "0000";   
 }
 
-void Move::from_string(const std::string &movestr)
+void Move::from_string(const std::string &movestr, const Position& pos)
 {
+    // By default the move is NORMAL
     m_from = StringToSquare(movestr);
     m_to = StringToSquare(movestr.substr(2));
     m_type = NORMAL;
 
+    // e7e8q : size==5 -> PROMOTION
     if (movestr.size() == 5)
     {
         m_type = PROMOTION;
@@ -59,7 +61,9 @@ void Move::from_string(const std::string &movestr)
             break;
         }
     }
-
+    
+    // KING jump -> CASTLING
+    if (GetPieceType(pos.GetPiece(m_from)) == KING)
     if (m_from == SQ_E1 && m_to == SQ_G1 ||
         m_from == SQ_E8 && m_to == SQ_G8 ||
         m_from == SQ_E1 && m_to == SQ_C1 ||
@@ -70,6 +74,13 @@ void Move::from_string(const std::string &movestr)
             m_castlingSide = KING_SIDE;
         if ((m_to == SQ_C1) || (m_to == SQ_C8))
             m_castlingSide = QUEEN_SIDE;
+    }
+
+    // PAWN go to passantSQ -> ENPASSANT
+    if (GetPieceType(pos.GetPiece(m_from)) == PAWN)
+    {
+        if (m_to == pos.m_passantSQ)
+            m_type = ENPASSANT;
     }
 }
 
@@ -261,24 +272,23 @@ std::vector<Move> KingMoves(Square s, const Position& pos)
     return moves;    
 }
 
-std::vector<Move> KingCastleMoves(Square s, const Position& pos)
+std::vector<Move> CastleMoves(Color side, const Position& pos)
 {
+    std::vector<Move> moves;
+    
+    Square kingRookSq = (side == WHITE) ? SQ_H1 : SQ_H8;
+    Square queenRookSq = (side == WHITE) ? SQ_A1 : SQ_A8;
+    Square kingSq = (side == WHITE) ? SQ_E1 : SQ_E8;
+    
     // no castling under attack
-    if (isSquareSet(pos.m_underAttack, s))
+    if (isSquareSet(pos.m_underAttack, kingSq))
         return {};
 
-    std::vector<Move> moves;
-    Piece p = pos.GetPiece(s);
-    Color baseColor = GetColor(p);
-    
-    Square kingRookSq = (baseColor == WHITE) ? SQ_H1 : SQ_H8;
-    Square queenRookSq = (baseColor == WHITE) ? SQ_A1 : SQ_A8;
-
     // Castling    
-    if ( (baseColor == WHITE && pos.m_whiteCastleKing) ||
-         (baseColor == BLACK && pos.m_blackCastleKing) )  
+    if ( (side == WHITE && pos.m_whiteCastleKing) ||
+         (side == BLACK && pos.m_blackCastleKing) )  
     {
-        Square sq_r = SQ_RIGHT(s);
+        Square sq_r = SQ_RIGHT(kingSq);
         Square sq_rr = SQ_RIGHT(sq_r);
 
         if ( (pos.GetPiece(sq_r)  == NO_PIECE) &&
@@ -286,13 +296,13 @@ std::vector<Move> KingCastleMoves(Square s, const Position& pos)
               !isSquareSet(pos.m_underAttack, sq_r) &&
               !isSquareSet(pos.m_underAttack, sq_rr) )
         {
-            moves.push_back(Move(s, KING_SIDE));
+            moves.push_back(Move(kingSq, KING_SIDE));
         }
     }
-    if ((baseColor == WHITE && pos.m_whiteCastleQueen) ||
-        (baseColor == BLACK && pos.m_blackCastleQueen) )
+    if ((side == WHITE && pos.m_whiteCastleQueen) ||
+        (side == BLACK && pos.m_blackCastleQueen) )
     {
-        Square sq_l = SQ_LEFT(s);
+        Square sq_l = SQ_LEFT(kingSq);
         Square sq_ll = SQ_LEFT(sq_l);
         Square sq_lll = SQ_LEFT(sq_ll);
 
@@ -302,7 +312,7 @@ std::vector<Move> KingCastleMoves(Square s, const Position& pos)
               !isSquareSet(pos.m_underAttack, sq_l) &&
               !isSquareSet(pos.m_underAttack, sq_l))
         {
-            moves.push_back(Move(s, QUEEN_SIDE));
+            moves.push_back(Move(kingSq, QUEEN_SIDE));
         }
     }    
 

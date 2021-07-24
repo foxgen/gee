@@ -88,7 +88,7 @@ int main(int argc, char *argv[])
                 iss >> movestr;
                 GetLogger() << movestr << std::endl;
                 Move m;
-                m.from_string(movestr);
+                m.from_string(movestr, game.m_currentPosition);
                 game.m_currentPosition.ApplyMove(std::move(m));
                 game.m_currentPosition.SwitchSide();
             }                        
