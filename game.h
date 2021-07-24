@@ -28,13 +28,13 @@ public:
     std::string bestmove();    
     int     uci();
 
-    std::vector<Move> GetAllMoves(Bitboard& underAttack);
-
-    std::vector<Move> m_gameMoves;
-    Bitboard m_underAttack;
-
+public:
+    // currect context
+    std::vector<Move> GetAllMoves(Color side);
+    Bitboard GetAttacks(Position& pos, Color side);
 public:
     std::condition_variable m_cv;
     std::mutex m_lock;
     std::atomic<bool> m_thinking;
+    std::vector<Move> m_gameMoves;
 };

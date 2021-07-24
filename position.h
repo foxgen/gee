@@ -2,11 +2,9 @@
 #include "types.h"
 #include <string>
 #include "util.h"
+#include "bitboard.h"
 
 class Move;
-
-std::string SquareToString(const Square sq);
-Square StringToSquare(const std::string& s);
 
 class Position
 {
@@ -24,10 +22,13 @@ public:
     void RemovePiece(Piece pc, Square s);
     void MovePiece(Piece pc, Square from, Square to);
     void PrintBoard();
+    void SwitchSide();
+    Square FindKing(Color c);
 
     Piece m_board[SQ_MAX];
     Color m_sideToMove;
 
+    // Possible castling
     bool  m_blackCastleKing;
     bool  m_blackCastleQueen;
     bool  m_whiteCastleKing;
@@ -37,6 +38,9 @@ public:
 
     int     m_halfMoveClock;
     int     m_fullMoveNumber;
+
+    mutable Bitboard m_attacks{0};
+    mutable Bitboard m_underAttack{0};
 };
 
 

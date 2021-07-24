@@ -11,6 +11,8 @@ add_library(genchesslib
 	position.h
 	util.cpp
 	util.h
+    bitboard.cpp
+    bitboard.h
 	types.h
 )
 

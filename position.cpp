@@ -61,31 +61,7 @@ char PieceToChar(const Piece p)
     return c;
 }
 
-Square StringToSquare(const std::string& s)
-{
-    int r = s[1] - '1';
-    int pos = toupper(s[0]) - 'A';
 
-    return (Square)(r * 8 + pos);
-}
-
-std::string SquareToString(const Square sq)
-{
-    if (sq == SQ_MAX)
-        return "--";
-
-    int r, pos;
-    char s[3];
-
-    r = sq / 8;
-    pos = sq % 8;
-
-    s[0] = 'a' + pos;
-    s[1] = '1' + r;
-    s[2] = 0;
-
-    return  s;
-}
 
 void Position::PrintBoard()
 {
@@ -263,9 +239,44 @@ void Position::ClearSquare(Square s)
     m_board[s] = NO_PIECE;
 }
 
+void Position::SwitchSide()
+{
+    m_sideToMove = SwitchColor(m_sideToMove);
+    std::swap(m_attacks, m_underAttack);
+}
+
+Square Position::FindKing(Color c)
+{
+    for (int s = Square::SQ_A1; s != Square::SQ_MAX; s++)
+    {
+        Piece p = m_board[s];
+        PieceType pt = GetPieceType(p);
+        Color pc = GetColor(p);
+        if (pt == KING && pc == c)
+        return static_cast<Square>(s);
+    }
+
+    return SQ_MAX;
+}
+
 bool Position::ApplyMove(Move&& move)
 {
     Piece p = m_board[move.m_from];
+    Color c = GetColor(p);
+
+    if (p==B_KING)
+        m_blackCastleKing = m_blackCastleQueen = false;
+    if (p==W_KING)
+        m_whiteCastleKing = m_whiteCastleQueen = false;    
+    if (move.m_from == SQ_A1)
+        m_whiteCastleQueen = false;
+    if (move.m_from == SQ_H1)
+        m_whiteCastleKing = false;
+    if (move.m_from == SQ_A8)
+        m_blackCastleQueen = false;
+    if (move.m_from == SQ_H8)
+        m_blackCastleKing = false;
+
     switch(move.m_type)
     {
         case NORMAL:
@@ -277,7 +288,7 @@ bool Position::ApplyMove(Move&& move)
         case PROMOTION:
         {
             ClearSquare(move.m_from);
-            PutPiece(move.m_newFigure, move.m_to);
+            PutPiece(MakePiece(move.m_newFigure,c), move.m_to);
 
             return true;
         }

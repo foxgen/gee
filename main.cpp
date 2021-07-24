@@ -31,8 +31,6 @@ int main(int argc, char *argv[])
         std::string cmd;
         iss >> cmd;
         GetLogger() << "cmd = " << cmd << std::endl;
-        
-        //__asm int 3    
 
         if (cmd == "uci")
         {
@@ -53,7 +51,6 @@ int main(int argc, char *argv[])
         if (cmd == "register")
         {
             iss >> cmd;
-            // __asm int 3
         }
 
         if (cmd == "ucinewgame")
@@ -66,11 +63,10 @@ int main(int argc, char *argv[])
         {
             // position startpos moves e2e4 e7e5 g1f3
             // position 
-            //__asm int 3
             std::string cmd1;
-            iss >> cmd1;
-
             std::string fen;
+
+            iss >> cmd1;
 
             if (cmd1 == "startpos")
                 fen = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
@@ -79,12 +75,12 @@ int main(int argc, char *argv[])
             {
                 iss >> fen;                                
             }
+            game.position(fen);
+
             // todo add moves
             iss >> cmd;
             GetLogger() << cmd << std::endl;
-
             GetLogger() << "fen = " << fen << std::endl;
-            game.position(fen);
 
             while (!iss.eof())
             {
@@ -94,7 +90,7 @@ int main(int argc, char *argv[])
                 Move m;
                 m.from_string(movestr);
                 game.m_currentPosition.ApplyMove(std::move(m));
-                game.m_currentPosition.m_sideToMove = SwitchColor(game.m_currentPosition.m_sideToMove);
+                game.m_currentPosition.SwitchSide();
             }                        
             
             GetLogger() << game.m_currentPosition.fen() << std::endl;

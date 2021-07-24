@@ -91,9 +91,3 @@ inline Color GetColor(Piece p)
 
     return NO_COLOR;  
 }
-
-typedef uint64_t Bitboard;
-inline void SetUnderAttack(Bitboard& bb, Square sq)
-{
-  bb |= (1 << sq);      
-}

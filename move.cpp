@@ -1,42 +1,86 @@
 #include "move.h"
 
-
 std::string Move::to_string()
 {
-    return SquareToString(m_from) + SquareToString(m_to);    
+    switch (m_type)
+    {
+    case PROMOTION:
+        {    
+            std::string figure = 
+                    (m_newFigure == QUEEN) ? "q" :
+                    (m_newFigure == BISHOP) ? "b" :
+                    (m_newFigure == ROOK) ? "r" :
+                    (m_newFigure == KNIGHT) ? "n" : "-";
+
+            return SquareToString(m_from) + SquareToString(m_to) + figure;
+        }
+        break;    
+    case CASTLING:
+        if (m_castlingSide == KING_SIDE)
+            return SquareToString(m_from) + SquareToString(SQ_RIGHT(SQ_RIGHT(m_from)));
+        if (m_castlingSide == QUEEN_SIDE)
+            return SquareToString(m_from) + SquareToString(SQ_LEFT(SQ_LEFT(m_from)));    
+        break;
+    case ENPASSANT:
+    case NORMAL:
+    default:
+        return SquareToString(m_from) + SquareToString(m_to);
+        break;
+    } 
+
+    return "0000";   
 }
 
-void Move::from_string(const std::string& movestr)
+void Move::from_string(const std::string &movestr)
 {
     m_from = StringToSquare(movestr);
     m_to = StringToSquare(movestr.substr(2));
+    m_type = NORMAL;
+
+    if (movestr.size() == 5)
+    {
+        m_type = PROMOTION;
+        switch (movestr.back())
+        {
+        case 'q':
+            m_newFigure = QUEEN;
+            break;
+        case 'b':
+            m_newFigure = BISHOP;
+            break;
+        case 'r':
+            m_newFigure = ROOK;
+            break;
+        case 'n':
+            m_newFigure = KNIGHT;
+            break;
+        default:
+            m_newFigure = NO_PIECE_TYPE;
+            break;
+        }
+    }
+
+    if (m_from == SQ_E1 && m_to == SQ_G1 ||
+        m_from == SQ_E8 && m_to == SQ_G8 ||
+        m_from == SQ_E1 && m_to == SQ_C1 ||
+        m_from == SQ_E8 && m_to == SQ_C8)
+    {
+        m_type = CASTLING;
+        if ((m_to == SQ_G1) || (m_to == SQ_G8))
+            m_castlingSide = KING_SIDE;
+        if ((m_to == SQ_C1) || (m_to == SQ_C8))
+            m_castlingSide = QUEEN_SIDE;
+    }
 }
 
-
-std::vector<Move> RookMoves(Square s, const Position& pos, Bitboard& underAttack)
+Bitboard RookAttacks(Square s, const Position& pos)
 {
-    std::vector<Move> moves;
-    Piece p = pos.GetPiece(s);
-    Color baseColor = GetColor(p);
+    Bitboard bb{0};
 
-    if (baseColor == NO_COLOR)
-        return moves;
-    
     auto ProcessMove = [&](Square sq) {       
-
-        Piece p = pos.GetPiece(sq);
-        if (p != NO_PIECE)
-        {
-            // take
-            if (baseColor == GetColor(p))
-                return false;
-            moves.emplace_back(Move(s, sq));
-            SetUnderAttack(underAttack, sq);
-            return false;
-        }            
-        moves.emplace_back(Move(s, sq));
-        SetUnderAttack(underAttack, sq);
-        return true;
+        SetSquare(bb, sq);
+        // stop if square is occupied
+        return pos.GetPiece(sq) == NO_PIECE;
     };
 
     for (Square sq = SQ_UP(s); sq != SQ_MAX; sq = SQ_UP(sq))
@@ -62,33 +106,33 @@ std::vector<Move> RookMoves(Square s, const Position& pos, Bitboard& underAttack
         if (!ProcessMove(sq))
             break;
     }
-    
+
+    return bb;
+}
+
+std::vector<Move> RookMoves(Square s, const Position& pos)
+{
+    std::vector<Move> moves;
+    Bitboard bb = RookAttacks(s, pos);
+    std::vector<Square> squares = GetSquaresFromBB(bb);
+    for (auto sq : squares)
+    {
+        Piece p = pos.GetPiece(sq);
+        if (GetColor(p) != pos.m_sideToMove)
+            moves.push_back(Move(s, sq));           
+    }
+
     return moves;
 }
 
-std::vector<Move> BishopMoves(Square s, const Position& pos, Bitboard& underAttack)
+Bitboard BishopAttacks(Square s, const Position& pos)
 {
-    std::vector<Move> moves;
-    Piece p = pos.GetPiece(s);
-    Color baseColor = GetColor(p);
+    Bitboard bb{0};
 
-    if (baseColor == NO_COLOR)
-        return moves;
-    
     auto ProcessMove = [&](Square sq) {       
-
-        Piece p = pos.GetPiece(sq);
-        if (p != NO_PIECE)
-        {
-            if (baseColor == GetColor(p))
-                return false;
-            moves.emplace_back(Move(s, sq));
-            SetUnderAttack(underAttack, sq);
-            return false;
-        }            
-        moves.push_back(Move(s, sq));
-        SetUnderAttack(underAttack, sq);
-        return true;
+        SetSquare(bb, sq);
+        // stop if square is occupied
+        return pos.GetPiece(sq) == NO_PIECE;
     };
 
     for (Square sq = SQ_UP(SQ_RIGHT(s)); sq != SQ_MAX; sq = SQ_UP(SQ_RIGHT(sq)))
@@ -115,91 +159,118 @@ std::vector<Move> BishopMoves(Square s, const Position& pos, Bitboard& underAtta
             break;
     }
 
-    return moves;
+    return bb;
 }
 
-std::vector<Move> KnightMoves(Square s, const Position& pos, Bitboard& underAttack)
-{
-    std::vector<Move> moves;    
-    Piece p = pos.GetPiece(s);
-    Color baseColor = GetColor(p);
-
-    auto ProcessMove = [&](Square sq){
-        if (sq != SQ_MAX)
-        {
-            p = pos.GetPiece(sq);
-            if (p != NO_PIECE)
-            {
-                if (baseColor != GetColor(p))                
-                    moves.push_back(Move(s, sq));
-                    SetUnderAttack(underAttack, sq);
-            }
-            else
-            {
-                moves.push_back(Move(s, sq));
-                SetUnderAttack(underAttack, sq);
-            }
-        }
-    };
-    
-    ProcessMove(SQ_LEFT(SQ_UP(SQ_UP(s))));    
-    ProcessMove(SQ_RIGHT(SQ_UP(SQ_UP(s))));
-    ProcessMove(SQ_LEFT(SQ_LEFT(SQ_UP(s))));
-    ProcessMove(SQ_LEFT(SQ_LEFT(SQ_DOWN(s))));
-    ProcessMove(SQ_RIGHT(SQ_RIGHT(SQ_UP(s))));
-    ProcessMove(SQ_RIGHT(SQ_RIGHT(SQ_DOWN(s))));
-    ProcessMove(SQ_LEFT(SQ_DOWN(SQ_DOWN(s))));
-    ProcessMove(SQ_RIGHT(SQ_DOWN(SQ_DOWN(s))));
-
-    return moves;
-}
-
-std::vector<Move> QueenMoves(Square s, const Position& pos, Bitboard& underAttack)
+std::vector<Move> BishopMoves(Square s, const Position& pos)
 {
     std::vector<Move> moves;
-    std::vector<Move> qm = BishopMoves(s, pos, underAttack);
+    Bitboard bb = BishopAttacks(s, pos);
+    std::vector<Square> squares = GetSquaresFromBB(bb);
+    for (auto sq : squares)
+    {
+        Piece p = pos.GetPiece(sq);
+        if (GetColor(p) != pos.m_sideToMove)
+            moves.push_back(Move(s, sq));           
+    }
 
-    moves = RookMoves(s, pos, underAttack);
+    return moves;
+}
+
+Bitboard KnightAttacks(Square s, const Position& pos)
+{
+    Bitboard bb{0};
+
+    SetSquare(bb,SQ_LEFT(SQ_UP(SQ_UP(s))));    
+    SetSquare(bb,SQ_RIGHT(SQ_UP(SQ_UP(s))));
+    SetSquare(bb,SQ_LEFT(SQ_LEFT(SQ_UP(s))));
+    SetSquare(bb,SQ_LEFT(SQ_LEFT(SQ_DOWN(s))));
+    SetSquare(bb,SQ_RIGHT(SQ_RIGHT(SQ_UP(s))));
+    SetSquare(bb,SQ_RIGHT(SQ_RIGHT(SQ_DOWN(s))));
+    SetSquare(bb,SQ_LEFT(SQ_DOWN(SQ_DOWN(s))));
+    SetSquare(bb,SQ_RIGHT(SQ_DOWN(SQ_DOWN(s))));
+
+    return bb;
+}
+
+std::vector<Move> KnightMoves(Square s, const Position& pos)
+{
+    std::vector<Move> moves;
+    Bitboard bb = KnightAttacks(s, pos);
+    std::vector<Square> squares = GetSquaresFromBB(bb);
+    for (auto sq : squares)
+    {
+        Piece p = pos.GetPiece(sq);
+        if (GetColor(p) != pos.m_sideToMove)
+            moves.push_back(Move(s, sq));           
+    }
+
+    return moves;
+}
+
+Bitboard QueenAttacks(Square s, const Position& pos)
+{
+    Bitboard bb{0};
+
+    bb |= BishopAttacks(s, pos);
+    bb |= RookAttacks(s, pos);
+
+    return bb;
+}
+
+std::vector<Move> QueenMoves(Square s, const Position& pos)
+{
+    std::vector<Move> moves;
+    std::vector<Move> qm = BishopMoves(s, pos);
+
+    moves = RookMoves(s, pos);
     moves.insert(moves.end(), qm.begin(), qm.end());
 
     return moves;    
 }
 
-std::vector<Move> KingMoves(Square s, const Position& pos, Bitboard& underAttack)
+Bitboard KingAttacks(Square s, const Position& pos)
 {
+    Bitboard bb{0};
+
+    SetSquare(bb,SQ_LEFT(SQ_UP(s)));
+    SetSquare(bb,SQ_LEFT(SQ_DOWN(s)));
+    SetSquare(bb,SQ_RIGHT(SQ_UP(s)));    
+    SetSquare(bb,SQ_RIGHT(SQ_DOWN(s)));
+    
+    SetSquare(bb,SQ_UP(s));
+    SetSquare(bb,SQ_DOWN(s));
+    SetSquare(bb,SQ_LEFT(s));
+    SetSquare(bb,SQ_RIGHT(s));
+
+    return bb;
+}
+
+std::vector<Move> KingMoves(Square s, const Position& pos)
+{
+    std::vector<Move> moves;
+    Bitboard bb = KingAttacks(s, pos);
+    std::vector<Square> squares = GetSquaresFromBB(bb);
+    for (auto sq : squares)
+    {
+        Piece p = pos.GetPiece(sq);
+        if (GetColor(p) != pos.m_sideToMove && !isSquareSet(pos.m_underAttack, sq))
+            moves.push_back(Move(s, sq));           
+    }
+
+    return moves;    
+}
+
+std::vector<Move> KingCastleMoves(Square s, const Position& pos)
+{
+    // no castling under attack
+    if (isSquareSet(pos.m_underAttack, s))
+        return {};
+
     std::vector<Move> moves;
     Piece p = pos.GetPiece(s);
     Color baseColor = GetColor(p);
-
-    auto ProcessMove = [&](Square sq){        
-        if (sq != SQ_MAX)
-        {
-            p = pos.GetPiece(sq);
-            if (p != NO_PIECE)
-            {
-                // take
-                if (baseColor != GetColor(p))                
-                    moves.push_back(Move(s, sq));
-                    SetUnderAttack(underAttack, sq);
-            }
-            else
-            {                
-                moves.push_back(Move(s, sq));
-                SetUnderAttack(underAttack, sq);
-            }
-        }
-    };
-
-    ProcessMove(SQ_LEFT(SQ_UP(s)));
-    ProcessMove(SQ_LEFT(SQ_DOWN(s)));
-    ProcessMove(SQ_RIGHT(SQ_UP(s)));    
-    ProcessMove(SQ_RIGHT(SQ_DOWN(s)));
     
-    ProcessMove(SQ_UP(s));
-    ProcessMove(SQ_DOWN(s));
-    ProcessMove(SQ_LEFT(s));
-    ProcessMove(SQ_RIGHT(s));
-
     Square kingRookSq = (baseColor == WHITE) ? SQ_H1 : SQ_H8;
     Square queenRookSq = (baseColor == WHITE) ? SQ_A1 : SQ_A8;
 
@@ -207,8 +278,13 @@ std::vector<Move> KingMoves(Square s, const Position& pos, Bitboard& underAttack
     if ( (baseColor == WHITE && pos.m_whiteCastleKing) ||
          (baseColor == BLACK && pos.m_blackCastleKing) )  
     {
-        if ( (pos.GetPiece(SQ_RIGHT(s))           == NO_PIECE) &&
-             (pos.GetPiece(SQ_RIGHT(SQ_RIGHT(s))) == NO_PIECE) )
+        Square sq_r = SQ_RIGHT(s);
+        Square sq_rr = SQ_RIGHT(sq_r);
+
+        if ( (pos.GetPiece(sq_r)  == NO_PIECE) &&
+             (pos.GetPiece(sq_rr) == NO_PIECE) &&
+              !isSquareSet(pos.m_underAttack, sq_r) &&
+              !isSquareSet(pos.m_underAttack, sq_rr) )
         {
             moves.push_back(Move(s, KING_SIDE));
         }
@@ -216,8 +292,15 @@ std::vector<Move> KingMoves(Square s, const Position& pos, Bitboard& underAttack
     if ((baseColor == WHITE && pos.m_whiteCastleQueen) ||
         (baseColor == BLACK && pos.m_blackCastleQueen) )
     {
-        if ( (pos.GetPiece(SQ_LEFT(s))          == NO_PIECE) &&
-             (pos.GetPiece(SQ_LEFT(SQ_LEFT(s))) == NO_PIECE) )
+        Square sq_l = SQ_LEFT(s);
+        Square sq_ll = SQ_LEFT(sq_l);
+        Square sq_lll = SQ_LEFT(sq_ll);
+
+        if ( (pos.GetPiece(sq_l)  == NO_PIECE) &&
+             (pos.GetPiece(sq_ll) == NO_PIECE) &&
+             (pos.GetPiece(sq_lll) == NO_PIECE) &&
+              !isSquareSet(pos.m_underAttack, sq_l) &&
+              !isSquareSet(pos.m_underAttack, sq_l))
         {
             moves.push_back(Move(s, QUEEN_SIDE));
         }
@@ -226,7 +309,18 @@ std::vector<Move> KingMoves(Square s, const Position& pos, Bitboard& underAttack
     return moves;    
 }
 
-std::vector<Move> PawnMoves(Square s, const Position& pos, Bitboard& underAttack)
+Bitboard PawnAttacks(Square s, const Position& pos)
+{
+    Bitboard bb{0};
+    auto AdvanceMove = (pos.m_sideToMove == WHITE) ? SQ_UP : SQ_DOWN;
+
+    SetSquare(bb,AdvanceMove(SQ_LEFT(s)));
+    SetSquare(bb,AdvanceMove(SQ_RIGHT(s)));
+
+    return bb;
+}
+
+std::vector<Move> PawnMoves(Square s, const Position& pos)
 {
     Square sq;
     Piece p = pos.GetPiece(s);
@@ -249,7 +343,7 @@ std::vector<Move> PawnMoves(Square s, const Position& pos, Bitboard& underAttack
         {
             // PROMOTION
             for (auto figure : { KNIGHT, BISHOP, ROOK, QUEEN })            
-                moves.push_back(Move(PROMOTION, s, sq, MakePiece(figure, baseColor)));
+                moves.push_back(Move(PROMOTION, s, sq, figure));
         }
         else
         {
@@ -271,7 +365,6 @@ std::vector<Move> PawnMoves(Square s, const Position& pos, Bitboard& underAttack
 
     // take
     sq = AdvanceMove(SQ_LEFT(s));
-    SetUnderAttack(underAttack, sq);
 
     if (sq != SQ_MAX )
     {
@@ -282,7 +375,7 @@ std::vector<Move> PawnMoves(Square s, const Position& pos, Bitboard& underAttack
             {
                 // PROMOTION
                 for (auto figure : { KNIGHT, BISHOP, ROOK, QUEEN })            
-                    moves.push_back(Move(PROMOTION, s, sq, MakePiece(figure, baseColor)));                    
+                    moves.push_back(Move(PROMOTION, s, sq, figure));                    
             }
             else
             {
@@ -293,12 +386,10 @@ std::vector<Move> PawnMoves(Square s, const Position& pos, Bitboard& underAttack
         if (sq == pos.m_passantSQ)
         {
             moves.push_back(Move(ENPASSANT, s, sq));
-            SetUnderAttack(underAttack, sq);
         }
     }        
 
     sq = AdvanceMove(SQ_RIGHT(s));
-    SetUnderAttack(underAttack, sq);
     
     if (sq != SQ_MAX )
     {
@@ -309,7 +400,7 @@ std::vector<Move> PawnMoves(Square s, const Position& pos, Bitboard& underAttack
             {
                 // PROMOTION
                 for (auto figure : { KNIGHT, BISHOP, ROOK, QUEEN })            
-                    moves.push_back(Move(PROMOTION, s, sq, MakePiece(figure, baseColor)));            
+                    moves.push_back(Move(PROMOTION, s, sq, figure));            
             }
             else
             {

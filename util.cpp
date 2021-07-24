@@ -30,8 +30,35 @@ split(const std::string& str, const std::string& delim){
 std::ostream&
 GetLogger()
 {
-    static std::ofstream ofs("./example.txt");   
+    static std::ofstream ofs("./log.txt");   
     return ofs.is_open() ? ofs : std::cout;
 
     //return std::cout;
+}
+
+
+Square StringToSquare(const std::string& s)
+{
+    int r = s[1] - '1';
+    int pos = toupper(s[0]) - 'A';
+
+    return (Square)(r * 8 + pos);
+}
+
+std::string SquareToString(const Square sq)
+{
+    if (sq == SQ_MAX)
+        return "--";
+
+    int r, pos;
+    char s[3];
+
+    r = sq / 8;
+    pos = sq % 8;
+
+    s[0] = 'a' + pos;
+    s[1] = '1' + r;
+    s[2] = 0;
+
+    return  s;
 }

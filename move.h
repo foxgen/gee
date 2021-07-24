@@ -12,8 +12,8 @@ public:
         : m_from(from), m_to(to) {};
     Move(MoveType t, Square from, Square to)
         : m_type(t), m_from(from), m_to(to) {};
-    Move(MoveType t, Square from, Square to, Piece p)
-        : m_type(t), m_from(from), m_to(to), m_newFigure(p) {};        
+    Move(MoveType t, Square from, Square to, PieceType pt)
+        : m_type(t), m_from(from), m_to(to), m_newFigure(pt) {};        
 
     Move(Square from, CastlingSide side)
         : m_type(CASTLING), m_from(from), m_castlingSide(side) {};
@@ -22,7 +22,7 @@ public:
     Square      m_from;
     Square      m_to;
 
-    Piece       m_newFigure{NO_PIECE};
+    PieceType   m_newFigure{NO_PIECE_TYPE};
     CastlingSide m_castlingSide{KING_SIDE};
 
     bool operator == (const Move& that)
@@ -64,9 +64,17 @@ static std::ostream& operator << (std::ostream& os, const Move& move)
     return os;
 }
 
-std::vector<Move> RookMoves(Square s, const Position& pos, Bitboard& underAttack);
-std::vector<Move> BishopMoves(Square s, const Position& pos, Bitboard& underAttack);
-std::vector<Move> QueenMoves(Square s, const Position& pos, Bitboard& underAttack);
-std::vector<Move> KnightMoves(Square s, const Position& pos, Bitboard& underAttack);
-std::vector<Move> KingMoves(Square s, const Position& pos, Bitboard& underAttack);
-std::vector<Move> PawnMoves(Square s, const Position& pos, Bitboard& underAttack);
+Bitboard RookAttacks(Square s, const Position& pos);
+Bitboard BishopAttacks(Square s, const Position& pos);
+Bitboard QueenAttacks(Square s, const Position& pos);
+Bitboard KnightAttacks(Square s, const Position& pos);
+Bitboard KingAttacks(Square s, const Position& pos);
+Bitboard PawnAttacks(Square s, const Position& pos);
+
+std::vector<Move> RookMoves(Square s, const Position& pos);
+std::vector<Move> BishopMoves(Square s, const Position& pos);
+std::vector<Move> QueenMoves(Square s, const Position& pos);
+std::vector<Move> KnightMoves(Square s, const Position& pos);
+std::vector<Move> KingMoves(Square s, const Position& pos);
+std::vector<Move> KingCastleMoves(Square s, const Position& pos);
+std::vector<Move> PawnMoves(Square s, const Position& pos);
