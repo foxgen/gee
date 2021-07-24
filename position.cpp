@@ -263,6 +263,7 @@ bool Position::ApplyMove(Move&& move)
 {
     Piece p = m_board[move.m_from];
     Color c = GetColor(p);
+    m_passantSQ = SQ_MAX;
 
     if (p==B_KING)
         m_blackCastleKing = m_blackCastleQueen = false;
@@ -280,9 +281,22 @@ bool Position::ApplyMove(Move&& move)
     switch(move.m_type)
     {
         case NORMAL:
-        {            
-            MovePiece(p, move.m_from, move.m_to);
+        {
+            if (GetPieceType(GetPiece(move.m_from)) == PAWN)
+            {
+                auto AdvanceMove = (c == WHITE) ? SQ_UP : SQ_DOWN;
+                if (move.m_to == AdvanceMove(AdvanceMove(move.m_from)))
+                {
+                    Color enemyCol = (c == WHITE) ? BLACK : WHITE;
+                    if (GetPiece(SQ_LEFT(move.m_to)) == MakePiece(PAWN, enemyCol) ||
+                        GetPiece(SQ_RIGHT(move.m_to)) == MakePiece(PAWN, enemyCol) )
+                    {
+                        m_passantSQ = AdvanceMove(move.m_from);
+                    }
+                }
+            }
 
+            MovePiece(p, move.m_from, move.m_to);
             return true;
         }            
         case PROMOTION:
