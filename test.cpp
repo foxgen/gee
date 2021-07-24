@@ -350,6 +350,17 @@ TEST(AllMoves, test2)
 	EXPECT_EQ(moves.size(), 1);
 }
 
+TEST(AllMoves, test3)
+{
+	Game g;	
+	
+	g.position("7R/1p6/2PN2p1/p1PNk1N1/8/n7/PP4P1/4R1K1 b - - 0 1");
+	
+	std::vector<Move> moves = g.GetAllMoves(BLACK);
+	
+	EXPECT_EQ(moves.size(), 1);
+}
+
 TEST(MovesConversion, MovesConversion)
 {
 	EXPECT_EQ(Move(NORMAL, SQ_E2, SQ_E4).to_string(), "e2e4");
