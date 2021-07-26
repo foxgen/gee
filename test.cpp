@@ -342,31 +342,16 @@ TEST(AllMoves, test1)
 TEST(AllMoves, test2)
 {
 	Game g;	
-	
 	g.position("r3k2r/ppp1n1pp/2n2p2/4p3/P1Q2P1P/6q1/RB1Nb1B1/4K1NR w KQkq - 0 1");
-	
 	std::vector<Move> moves = GetAllMoves(g.m_currentPosition);
-
-	for (auto m : moves)
-	{
-		std::cout << m << std::endl;
-	}
-
 	EXPECT_EQ(moves.size(), 1);
 }
 
 TEST(AllMoves, test3)
 {
 	Game g;	
-	
 	g.position("7R/1p6/2PN2p1/p1PNk1N1/8/n7/PP4P1/4R1K1 b - - 0 1");
-	
 	std::vector<Move> moves = GetAllMoves(g.m_currentPosition);
-	
-	for (auto m : moves)
-	{
-		std::cout << m << std::endl;
-	}
 	EXPECT_EQ(moves.size(), 2);
 }
 
