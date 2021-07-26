@@ -13,7 +13,7 @@ void ClearSquare(Bitboard& bb, Square sq)
       bb &= ~((Bitboard)1 << sq);      
 }
 
-bool isSquareSet(Bitboard& bb, Square sq)
+bool isSquareSet(Bitboard bb, Square sq)
 {
   if (sq != SQ_MAX)
       return (bb & ((Bitboard)1<<sq));
@@ -21,7 +21,7 @@ bool isSquareSet(Bitboard& bb, Square sq)
 }
 
 
-std::vector<Square> GetSquaresFromBB(Bitboard& bb)
+std::vector<Square> GetSquaresFromBB(Bitboard bb)
 {
     std::vector<Square> squares;
     for (Square sq = SQ_A1; sq != SQ_MAX; sq = static_cast<Square>(sq+1))

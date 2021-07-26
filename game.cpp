@@ -4,13 +4,6 @@
 #include <utility>
 #include <algorithm>
 
-int getRandomNumber(int min, int max)
-{
-    static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0); 
-    // Равномерно распределяем рандомное число в нашем диапазоне
-    return static_cast<int>(rand() * fraction * (max - min + 1) + min);
-}
-
 int Game::go()
 {
     GetLogger() << "go\n";
@@ -31,17 +24,18 @@ int Game::stop()
 
 int Game::newgame(const std::string& fen)
 {
-    m_startPosition.Set(fen);
-    m_currentPosition = m_startPosition;
+    srand(static_cast<unsigned int>(time(0)));
+
+    position(fen);
+    m_startPosition = m_currentPosition;
 
     return 0;
 }
 
 std::string Game::bestmove()
-{
-    
+{    
     std::vector<Move> moves = GetAllMoves(m_currentPosition.m_sideToMove);
-    GetLogger() << "size = " << moves.size() << std::endl;    
+    GetLogger() << "size = " << (int)moves.size() << std::endl;    
     int rn = getRandomNumber(0, moves.size()-1);
     Move m = moves[rn];
 
@@ -142,13 +136,6 @@ std::vector<Move> Game::GetAllMoves(Color side)
     m = CastleMoves(side, m_currentPosition);
     moves.insert(moves.end(), m.begin(), m.end());
 
-    GetLogger() << "Got " << moves.size() << " moves\n";
-    for (auto m : moves)
-    {
-        GetLogger() << m.to_string() << " ";
-    }
-    GetLogger() << std::endl;
-
     moves.erase(std::remove_if(
         moves.begin(),
         moves.end(),
@@ -164,13 +151,7 @@ std::vector<Move> Game::GetAllMoves(Color side)
         }),
         moves.end()
         );
-    
-    GetLogger() << "Got " << moves.size() << " moves after fix\n";
-    for (auto m : moves)
-    {
-        GetLogger() << m.to_string() << " ";
-    }
-    GetLogger() << std::endl;
-    return moves;
+
+    return moves;        
 }
           

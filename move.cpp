@@ -432,15 +432,3 @@ std::vector<Move> PawnMoves(Square s, const Position& pos)
     
     return moves;
 }
-
-std::vector<Move> GenerateMoves(Square s, const Position& pos)
-{
-    std::vector<Move> moves;
-    Piece p = pos.GetPiece(s);
-
-    if (p == NO_PIECE)
-        return moves;
-    
-
-    return moves;    
-}

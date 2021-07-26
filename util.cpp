@@ -1,5 +1,13 @@
 #include "util.h"
 #include <stdexcept>
+#include <cstdlib>
+
+int getRandomNumber(int min, int max)
+{
+    static const double fraction = 1.0 / (static_cast<double>(RAND_MAX) + 1.0); 
+    // Равномерно распределяем рандомное число в нашем диапазоне
+    return static_cast<int>(rand() * fraction * (max - min + 1) + min);
+}
 
 std::vector<std::string> 
 split(const std::string& str, const std::string& delim){
@@ -61,4 +69,60 @@ std::string SquareToString(const Square sq)
     s[2] = 0;
 
     return  s;
+}
+
+bool isCharPiece(const char c)
+{
+    const std::string figures = "rnbqkRNBQKpP";
+    return std::string::npos != figures.find(c);
+}
+
+Piece CharToPiece(const char c)
+{
+    Piece p = NO_PIECE;
+    switch (c)
+    {
+    case 'r': p = B_ROOK; break;
+    case 'n': p = B_KNIGHT; break;
+    case 'b': p = B_BISHOP; break;
+    case 'k': p = B_KING; break;
+    case 'q': p = B_QUEEN; break;
+    case 'p': p = B_PAWN; break;
+    case 'R': p = W_ROOK; break;
+    case 'N': p = W_KNIGHT; break;
+    case 'B': p = W_BISHOP; break;
+    case 'K': p = W_KING; break;
+    case 'Q': p = W_QUEEN; break;
+    case 'P': p = W_PAWN; break;
+    default:
+        break;
+    }
+
+    return p;
+}
+
+char PieceToChar(const Piece p)
+{
+    char c = ' ';
+    switch (p)
+    {
+    case B_ROOK: c = 'r'; break;
+    case B_KNIGHT: c = 'n'; break;
+    case B_BISHOP: c = 'b'; break;
+    case B_KING: c = 'k'; break;
+    case B_QUEEN: c = 'q'; break;
+    case B_PAWN: c = 'p'; break;
+    case W_ROOK: c = 'R'; break;
+    case W_KNIGHT: c = 'N'; break;
+    case W_BISHOP: c = 'B'; break;
+    case W_KING: c = 'K'; break;
+    case W_QUEEN: c = 'Q'; break;
+    case W_PAWN: c = 'P'; break;
+
+        //case NO_PIECE: break;
+    default:        
+        break;
+    }
+
+    return c;
 }

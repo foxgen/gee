@@ -5,65 +5,7 @@
 #include <iostream>
 #include <sstream>
 
-bool isCharPiece(const char c)
-{
-    const std::string figures = "rnbqkRNBQKpP";
-    return std::string::npos != figures.find(c);
-}
-
-Piece CharToPiece(const char c)
-{
-    Piece p = NO_PIECE;
-    switch (c)
-    {
-    case 'r': p = B_ROOK; break;
-    case 'n': p = B_KNIGHT; break;
-    case 'b': p = B_BISHOP; break;
-    case 'k': p = B_KING; break;
-    case 'q': p = B_QUEEN; break;
-    case 'p': p = B_PAWN; break;
-    case 'R': p = W_ROOK; break;
-    case 'N': p = W_KNIGHT; break;
-    case 'B': p = W_BISHOP; break;
-    case 'K': p = W_KING; break;
-    case 'Q': p = W_QUEEN; break;
-    case 'P': p = W_PAWN; break;
-    default:
-        break;
-    }
-
-    return p;
-}
-
-char PieceToChar(const Piece p)
-{
-    char c = ' ';
-    switch (p)
-    {
-    case B_ROOK: c = 'r'; break;
-    case B_KNIGHT: c = 'n'; break;
-    case B_BISHOP: c = 'b'; break;
-    case B_KING: c = 'k'; break;
-    case B_QUEEN: c = 'q'; break;
-    case B_PAWN: c = 'p'; break;
-    case W_ROOK: c = 'R'; break;
-    case W_KNIGHT: c = 'N'; break;
-    case W_BISHOP: c = 'B'; break;
-    case W_KING: c = 'K'; break;
-    case W_QUEEN: c = 'Q'; break;
-    case W_PAWN: c = 'P'; break;
-
-        //case NO_PIECE: break;
-    default:        
-        break;
-    }
-
-    return c;
-}
-
-
-
-void Position::PrintBoard()
+std::ostream& operator << (std::ostream& os, const Position& p)
 {
     for (int r = 0; r < 8; r++)
     {
@@ -71,10 +13,11 @@ void Position::PrintBoard()
         {
             Square sq = (Square)(r * 8 + (pos - 1));
 
-            printf("%c", PieceToChar(m_board[sq]));
+            os << PieceToChar(p.m_board[sq]);
         }
-        printf("\n");
+        os << std::endl;
     }
+    return os;
 }
 
 // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
@@ -345,3 +288,4 @@ bool Position::ApplyMove(Move&& move)
 
     return false;
 }
+

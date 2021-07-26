@@ -11,22 +11,24 @@ class Position
 public:
     Position() = default; 
 
+public:
     std::string fen() const;
     void Set(const std::string& fen);
-    Piece GetPiece(Square s) const;
 
-    bool ApplyMove(Move&& move);
-
+public:
+    Piece GetPiece(Square s) const;    
     void PutPiece(Piece pc, Square s);
     void ClearSquare(Square s);
     void RemovePiece(Piece pc, Square s);
     void MovePiece(Piece pc, Square from, Square to);
-    void PrintBoard();
+    bool ApplyMove(Move&& move);
     void SwitchSide();
+    
     Square FindKing(Color c);
 
     Piece m_board[SQ_MAX];
     Color m_sideToMove;
+    Square m_passantSQ;
 
     // Possible castling
     bool  m_blackCastleKing;
@@ -34,13 +36,11 @@ public:
     bool  m_whiteCastleKing;
     bool  m_whiteCastleQueen;
 
-    Square m_passantSQ;
-
     int     m_halfMoveClock;
     int     m_fullMoveNumber;
 
-    mutable Bitboard m_attacks{0};
-    mutable Bitboard m_underAttack{0};
+    Bitboard m_attacks{0};
+    Bitboard m_underAttack{0};
 };
 
 
