@@ -123,13 +123,14 @@ Bitboard RookAttacks(Square s, const Position& pos)
 
 std::vector<Move> RookMoves(Square s, const Position& pos)
 {
+    Color c = GetColor(pos.GetPiece(s));
     std::vector<Move> moves;
     Bitboard bb = RookAttacks(s, pos);
     std::vector<Square> squares = GetSquaresFromBB(bb);
     for (auto sq : squares)
     {
         Piece p = pos.GetPiece(sq);
-        if (GetColor(p) != pos.m_sideToMove)
+        if (GetColor(p) != c)
             moves.push_back(Move(s, sq));           
     }
 
@@ -175,13 +176,14 @@ Bitboard BishopAttacks(Square s, const Position& pos)
 
 std::vector<Move> BishopMoves(Square s, const Position& pos)
 {
+    Color c = GetColor(pos.GetPiece(s));
     std::vector<Move> moves;
     Bitboard bb = BishopAttacks(s, pos);
     std::vector<Square> squares = GetSquaresFromBB(bb);
     for (auto sq : squares)
     {
         Piece p = pos.GetPiece(sq);
-        if (GetColor(p) != pos.m_sideToMove)
+        if (GetColor(p) != c)
             moves.push_back(Move(s, sq));           
     }
 
@@ -206,13 +208,14 @@ Bitboard KnightAttacks(Square s, const Position& pos)
 
 std::vector<Move> KnightMoves(Square s, const Position& pos)
 {
+    Color c = GetColor(pos.GetPiece(s));
     std::vector<Move> moves;
     Bitboard bb = KnightAttacks(s, pos);
     std::vector<Square> squares = GetSquaresFromBB(bb);
     for (auto sq : squares)
     {
         Piece p = pos.GetPiece(sq);
-        if (GetColor(p) != pos.m_sideToMove)
+        if (GetColor(p) != c)
             moves.push_back(Move(s, sq));           
     }
 
@@ -259,13 +262,14 @@ Bitboard KingAttacks(Square s, const Position& pos)
 
 std::vector<Move> KingMoves(Square s, const Position& pos)
 {
+    Color c = GetColor(pos.GetPiece(s));
     std::vector<Move> moves;
     Bitboard bb = KingAttacks(s, pos);
     std::vector<Square> squares = GetSquaresFromBB(bb);
     for (auto sq : squares)
     {
         Piece p = pos.GetPiece(sq);
-        if (GetColor(p) != pos.m_sideToMove && !isSquareSet(pos.m_underAttack, sq))
+        if (GetColor(p) != c && !isSquareSet(pos.m_underAttack, sq))
             moves.push_back(Move(s, sq));           
     }
 
@@ -321,8 +325,9 @@ std::vector<Move> CastleMoves(Color side, const Position& pos)
 
 Bitboard PawnAttacks(Square s, const Position& pos)
 {
+    Color c = GetColor(pos.GetPiece(s));
     Bitboard bb{0};
-    auto AdvanceMove = (pos.m_sideToMove == WHITE) ? SQ_UP : SQ_DOWN;
+    auto AdvanceMove = (c == WHITE) ? SQ_UP : SQ_DOWN;
 
     SetSquare(bb,AdvanceMove(SQ_LEFT(s)));
     SetSquare(bb,AdvanceMove(SQ_RIGHT(s)));
