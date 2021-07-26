@@ -30,8 +30,7 @@ public:
 
 public:
     // currect context
-    std::vector<Move> GetAllMoves(Color side);
-    Bitboard GetAttacks(Position& pos, Color side);
+
 public:
     std::condition_variable m_cv;
     std::mutex m_lock;

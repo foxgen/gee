@@ -1,4 +1,6 @@
 #include "move.h"
+#include <utility>
+#include <algorithm>
 
 std::string Move::to_string()
 {
@@ -431,4 +433,117 @@ std::vector<Move> PawnMoves(Square s, const Position& pos)
     
     
     return moves;
+}
+
+Bitboard GetAttacks(Position& pos, Color side)
+{
+    Bitboard attacks{0};
+    for (Square sq = SQ_A1; sq != SQ_MAX; sq = static_cast<Square>(sq+1))
+    {
+        Piece p = pos.GetPiece(sq);
+        PieceType type = GetPieceType(p);
+        
+        if (side == GetColor(p))
+        {
+            switch (type)
+            {
+            case PAWN:
+                attacks |= PawnAttacks(sq, pos);
+                break;
+            case ROOK:
+                attacks |= RookAttacks(sq, pos);
+                break;
+            case BISHOP:
+                attacks |= BishopAttacks(sq, pos);
+                break;
+            case QUEEN:
+                attacks |= QueenAttacks(sq, pos);
+                break;
+            case KNIGHT:
+                attacks |= KnightAttacks(sq, pos);
+                break;
+            case KING:
+                attacks |= KingAttacks(sq, pos);
+                break;
+            default:
+                break;
+            }
+        }
+    }
+
+    return attacks;
+}
+
+Bitboard GetAttacks(Position& pos)
+{
+    return GetAttacks(pos, pos.m_sideToMove);
+}
+
+std::vector<Move> GetAllMoves(Position& pos, Color side)
+{    
+    std::vector<Move> m;
+    std::vector<Move> moves;
+
+    pos.m_attacks = GetAttacks(pos, side);
+    pos.m_underAttack = GetAttacks(pos, SwitchColor(side));
+
+    for (Square sq = SQ_A1; sq != SQ_MAX; sq = static_cast<Square>(sq+1))
+    {
+        Piece p = pos.GetPiece(sq);
+        PieceType type = GetPieceType(p);
+        
+        if (side == GetColor(p))
+        {
+            switch (type)
+            {
+            case PAWN:
+                m = PawnMoves(sq, pos);
+                break;
+            case ROOK:
+                m = RookMoves(sq, pos);
+                break;
+            case BISHOP:
+                m = BishopMoves(sq, pos);
+                break;
+            case QUEEN:
+                m = QueenMoves(sq, pos);
+                break;
+            case KNIGHT:
+                m = KnightMoves(sq, pos);
+                break;
+            case KING:
+                m = KingMoves(sq, pos);
+                break;
+            default:
+                break;
+            }
+            moves.insert(moves.end(), m.begin(), m.end());
+        }
+    }
+
+    m = CastleMoves(side, pos);
+    moves.insert(moves.end(), m.begin(), m.end());
+
+    moves.erase(std::remove_if(
+        moves.begin(),
+        moves.end(),
+        [&](Move& m){
+                Position testPos = pos;
+                
+                testPos.ApplyMove(Move(m));
+                Square kingSq = testPos.FindKing(side);
+                testPos.SwitchSide();
+
+                Bitboard attacks = GetAttacks(testPos, SwitchColor(side));
+                return isSquareSet(attacks, kingSq);                
+        }),
+        moves.end()
+        );
+
+    return moves;        
+}
+
+std::vector<Move> GetAllMoves(Position& pos)
+{
+    return GetAllMoves(pos, pos.m_sideToMove);
 }

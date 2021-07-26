@@ -40,26 +40,9 @@ public:
     int m_score;
 };
 
-static std::ostream& operator << (std::ostream& os, const Move& move)
+static std::ostream& operator << (std::ostream& os, Move& move)
 {
-    std::string moveType = move.m_type == NORMAL ? "NORMAL" : 
-                            move.m_type == PROMOTION ? "PROMOTION" :
-                            move.m_type == ENPASSANT ? "ENPASSANT" :
-                            move.m_type == CASTLING ? "CASTLE" : "unknown";
-    os << "(";
-    if (move.m_type == CASTLING )
-    {
-        os << ((move.m_castlingSide == QUEEN_SIDE) ? "0-0-0" : "0-0");
-    }
-    else
-    {
-        os << SquareToString(move.m_from) << " " << moveType << " " << SquareToString(move.m_to);        
-    }
-
-    os << ")";
-    
-    if ( move.m_type == PROMOTION )
-        os << " " << move.m_newFigure;        
+    os << MoveTypeStr(move.m_type) << "->" << move.to_string();
 
     return os;
 }
@@ -78,3 +61,17 @@ std::vector<Move> KnightMoves(Square s, const Position& pos);
 std::vector<Move> KingMoves(Square s, const Position& pos);
 std::vector<Move> CastleMoves(Color side, const Position& pos);
 std::vector<Move> PawnMoves(Square s, const Position& pos);
+
+/*
+class Figure
+{
+public:    
+    virtual Bitboard GetAttacks();
+    virtual std::vector<Move> GetMoves(Square s, const Position& Pos);
+}
+*/
+
+    std::vector<Move> GetAllMoves(Position& pos, Color side);
+    std::vector<Move> GetAllMoves(Position& pos);
+    Bitboard GetAttacks(Position& pos, Color side);
+    Bitboard GetAttacks(Position& pos);
