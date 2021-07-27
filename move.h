@@ -4,6 +4,9 @@
 #include <iostream>
 #include <vector>
 
+namespace gee
+{
+
 class Move
 {
 public:
@@ -75,3 +78,6 @@ public:
     std::vector<Move> GetAllMoves(Position& pos);
     Bitboard GetAttacks(Position& pos, Color side);
     Bitboard GetAttacks(Position& pos);
+
+
+} // gee

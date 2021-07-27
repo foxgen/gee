@@ -1,8 +1,10 @@
 #pragma once
 #include "types.h"
-#include <string>
 #include "util.h"
 #include "bitboard.h"
+
+namespace gee
+{
 
 class Move;
 
@@ -44,3 +46,4 @@ public:
 };
 
 
+} // gee

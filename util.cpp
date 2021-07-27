@@ -1,6 +1,7 @@
 #include "util.h"
-#include <stdexcept>
-#include <cstdlib>
+
+namespace gee
+{
 
 int getRandomNumber(int min, int max)
 {
@@ -126,3 +127,5 @@ char PieceToChar(const Piece p)
 
     return c;
 }
+
+} // gee

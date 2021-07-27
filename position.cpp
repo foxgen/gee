@@ -1,9 +1,9 @@
 #include "position.h"
 #include "move.h"
-#include <vector>
-#include <stdexcept>
-#include <iostream>
-#include <sstream>
+
+
+namespace gee
+{
 
 std::ostream& operator << (std::ostream& os, const Position& p)
 {
@@ -289,3 +289,4 @@ bool Position::ApplyMove(Move&& move)
     return false;
 }
 
+} // gee

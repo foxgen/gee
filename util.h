@@ -2,9 +2,15 @@
 
 #include <vector>
 #include <string>
+#include <condition_variable>
+#include <mutex>
+#include <atomic>
 #include <iostream>
 #include <fstream>
 #include "types.h"
+
+namespace gee
+{
 
 std::vector<std::string> 
 split(const std::string& str, const std::string& delim);
@@ -19,3 +25,5 @@ Piece CharToPiece(const char c);
 char PieceToChar(const Piece p);
 
 int getRandomNumber(int min, int max);
+
+} // gee

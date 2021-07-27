@@ -1,5 +1,17 @@
 #pragma once
 #include <cstdint>
+#include <vector>
+#include <string>
+#include <mutex>
+#include <chrono>
+#include <utility>
+#include <algorithm>
+#include <iostream>
+#include <stdexcept>
+#include <sstream>
+
+namespace gee
+{
 
 enum Color {
     NO_COLOR, WHITE, BLACK
@@ -103,3 +115,5 @@ inline Color GetColor(Piece p)
 
     return NO_COLOR;  
 }
+
+} // gee

@@ -1,13 +1,18 @@
 #pragma once
 #include "types.h"
-#include <vector>
+
+namespace gee
+{
 
 typedef uint64_t Bitboard;
 
-void SetSquare(Bitboard& bb, Square sq);
-void ClearSquare(Bitboard& bb, Square sq);
-bool isSquareSet(Bitboard bb, Square sq);
+void BBSet(Bitboard& bb, Square sq);
+void BBClear(Bitboard& bb, Square sq);
+bool BBisSet(Bitboard bb, Square sq);
 
-std::vector<Square> GetSquaresFromBB(Bitboard bb);
+std::vector<Square> BBGetSquares(Bitboard bb);
+Bitboard BBGetFromSquares(std::vector<Square> squares);
 
-void PrintBB(Bitboard bb);
+void BBPrint(Bitboard bb);
+
+} // gee

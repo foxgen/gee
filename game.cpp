@@ -1,8 +1,7 @@
 #include "game.h"
-#include <mutex>
-#include <chrono>
-#include <utility>
-#include <algorithm>
+
+namespace gee
+{
 
 int Game::go()
 {
@@ -52,3 +51,4 @@ int Game::position(const std::string& fen)
     return 0;
 }
 
+} // gee

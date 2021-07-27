@@ -7,19 +7,21 @@
 #include "move.h"
 #include <gtest/gtest.h>
 
+using namespace gee;
+
 TEST(BBTest, testSet)
 {
 	Bitboard bb{0};
-	SetSquare(bb, SQ_E4);
-	SetSquare(bb, SQ_A4);
-	SetSquare(bb, SQ_B7);
+	BBSet(bb, SQ_E4);
+	BBSet(bb, SQ_A4);
+	BBSet(bb, SQ_B7);
 
-	EXPECT_TRUE(isSquareSet(bb, SQ_E4));
-	EXPECT_TRUE(isSquareSet(bb, SQ_A4));
-	EXPECT_TRUE(isSquareSet(bb, SQ_B7));
+	EXPECT_TRUE(BBisSet(bb, SQ_E4));
+	EXPECT_TRUE(BBisSet(bb, SQ_A4));
+	EXPECT_TRUE(BBisSet(bb, SQ_B7));
 
-	ClearSquare(bb, SQ_A4);	
-	EXPECT_FALSE(isSquareSet(bb, SQ_A4));
+	BBClear(bb, SQ_A4);	
+	EXPECT_FALSE(BBisSet(bb, SQ_A4));
 }
 
 TEST(FenTest, MovesPiecesTest)
@@ -275,8 +277,8 @@ TEST(KingMoves, IllegalMove_to_attacked)
 	// Castle to King is illegal
 	pos.Set("r3k3/8/8/8/2b5/8/8/4K2R w K - 0 1");
 	pos.m_underAttack = 0;
-	SetSquare(pos.m_underAttack, SQ_F1);
-	SetSquare(pos.m_underAttack, SQ_E2);
+	BBSet(pos.m_underAttack, SQ_F1);
+	BBSet(pos.m_underAttack, SQ_E2);
 
 	std::vector<Move> moves = KingMoves(StringToSquare("e1"), pos);
 	std::vector<Square> m1, m2;	

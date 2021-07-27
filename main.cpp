@@ -1,10 +1,6 @@
-#include <string>
-#include <iostream>
-#include <sstream>
-#include "position.h"
-#include "move.h"
 #include "game.h"
-#include "util.h"
+
+using namespace gee;
 
 void UCIReply(const std::string& answer)
 {

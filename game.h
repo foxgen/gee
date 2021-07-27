@@ -3,10 +3,10 @@
 #include "types.h"
 #include "position.h"
 #include "move.h"
-#include <vector>
-#include <condition_variable>
-#include <mutex>
-#include <atomic>
+
+
+namespace gee
+{
 
 class Game
 {
@@ -37,3 +37,5 @@ public:
     std::atomic<bool> m_thinking;
     std::vector<Move> m_gameMoves;
 };
+
+} // gee
