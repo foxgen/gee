@@ -548,6 +548,8 @@ std::vector<Move> GetAllMoves(Position& pos)
 {
     return GetAllMoves(pos, pos.m_sideToMove);
 }
+//------------------------------------------------------------------------------------
+
 
 
 } // gee

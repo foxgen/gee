@@ -1,6 +1,6 @@
 #include "position.h"
 #include "move.h"
-
+#include "figure.h"
 
 namespace gee
 {
@@ -287,6 +287,14 @@ bool Position::ApplyMove(Move&& move)
     }
 
     return false;
+}
+
+
+std::vector<Move> Position::GetAllMoves(Color side)
+{
+    std::vector<Move> moves;
+
+    return moves;            
 }
 
 } // gee

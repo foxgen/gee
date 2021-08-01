@@ -65,19 +65,13 @@ std::vector<Move> KingMoves(Square s, const Position& pos);
 std::vector<Move> CastleMoves(Color side, const Position& pos);
 std::vector<Move> PawnMoves(Square s, const Position& pos);
 
-/*
-class Figure
-{
-public:    
-    virtual Bitboard GetAttacks();
-    virtual std::vector<Move> GetMoves(Square s, const Position& Pos);
-}
-*/
+std::vector<Move> GetAllMoves(Position& pos, Color side);
+std::vector<Move> GetAllMoves(Position& pos);
+Bitboard GetAttacks(Position& pos, Color side);
+Bitboard GetAttacks(Position& pos);
 
-    std::vector<Move> GetAllMoves(Position& pos, Color side);
-    std::vector<Move> GetAllMoves(Position& pos);
-    Bitboard GetAttacks(Position& pos, Color side);
-    Bitboard GetAttacks(Position& pos);
+//--------------------------------------------------------------------------------
+
 
 
 } // gee

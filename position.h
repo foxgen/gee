@@ -27,6 +27,7 @@ public:
     void SwitchSide();
     
     Square FindKing(Color c);
+    std::vector<Move> GetAllMoves(Color side);
 
     Piece m_board[SQ_MAX];
     Color m_sideToMove;
