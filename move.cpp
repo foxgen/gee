@@ -10,13 +10,13 @@
 namespace gee
 {
 
-Figure fig[] = {
-    PawnFigure(),
-    KnightFigure(),
-    BishopFigure(),
-    RookFigure(),
-    QueenFigure(),
-    KingFigure()
+std::array<std::unique_ptr<Figure>, 6> fig = {
+    std::make_unique<PawnFigure>(),
+    std::make_unique<KnightFigure>(),
+    std::make_unique<BishopFigure>(),
+    std::make_unique<RookFigure>(),
+    std::make_unique<QueenFigure>(),
+    std::make_unique<KingFigure>()
 };
 
 
@@ -115,7 +115,7 @@ Bitboard GetAttacks(Position& pos, Color side)
         PieceType type = GetPieceType(p);
         
         if (side == GetColor(p))
-            attacks |= fig[type].GetAttacks(sq, pos);
+            attacks |= fig[type-1]->GetAttacks(sq, pos);
     }
 
     return attacks;
@@ -142,7 +142,7 @@ std::vector<Move> GetAllMoves(Position& pos, Color side)
 
         if (side == GetColor(p))
         {
-            m = fig[type].GetMoves(sq, pos);
+            m = fig[type-1]->GetMoves(sq, pos);
             
             moves.insert(moves.end(), m.begin(), m.end());
         }
