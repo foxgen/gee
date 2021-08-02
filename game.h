@@ -3,6 +3,12 @@
 #include "types.h"
 #include "position.h"
 #include "move.h"
+#include "bishop.h"
+#include "rook.h"
+#include "knight.h"
+#include "pawn.h"
+#include "queen.h"
+#include "king.h"
 
 
 namespace gee

@@ -1,10 +1,5 @@
-#include <algorithm>
-#include <string>
-#include <vector>
-#include <iostream>
-#include <sstream>
 #include "game.h"
-#include "move.h"
+
 #include <gtest/gtest.h>
 
 using namespace gee;
@@ -143,8 +138,8 @@ TEST(RookMoves, testE2)
 
 	// Rook on E2
 	pos.Set("8/8/8/8/8/8/4R3/8 w - - 0 1");
-
-	std::vector<Move> moves = RookMoves(StringToSquare("e2"), pos);	
+	
+	std::vector<Move> moves = RookFigure().GetMoves(SQ_E2, pos);	
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -168,10 +163,10 @@ TEST(BishopMoves, testE2)
 {
 	Position pos;
 
-	// Rook on E2
+	// Bishop on E2
 	pos.Set("8/8/8/8/8/8/4B3/8 w - - 0 1");
 
-	std::vector<Move> moves = BishopMoves(StringToSquare("e2"), pos);
+	std::vector<Move> moves = BishopFigure().GetMoves(SQ_E2, pos);
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -194,10 +189,10 @@ TEST(KnightMoves, testE2)
 {
 	Position pos;
 
-	// Rook on E2
+	// Knight on E2
 	pos.Set("8/8/8/8/8/8/4N3/8 w - - 0 1");
 
-	std::vector<Move> moves = KnightMoves(StringToSquare("e2"), pos);
+	std::vector<Move> moves = KnightFigure().GetMoves(SQ_E2, pos);
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -220,10 +215,10 @@ TEST(QueenMoves, testE2)
 {
 	Position pos;
 
-	// Rook on E2
+	// Queen on E2
 	pos.Set("8/8/8/8/8/8/4Q3/8 w - - 0 1");
 
-	std::vector<Move> moves = QueenMoves(StringToSquare("e2"), pos);
+	std::vector<Move> moves = QueenFigure().GetMoves(SQ_E2, pos);
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -248,10 +243,10 @@ TEST(KingMoves, testE2)
 {
 	Position pos;
 
-	// Rook on E2
+	// King on E2
 	pos.Set("8/8/8/8/8/8/4K3/8 w - - 0 1");
 
-	std::vector<Move> moves = KingMoves(StringToSquare("e2"), pos);
+	std::vector<Move> moves = KingFigure().GetMoves(SQ_E2, pos);
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)
@@ -272,34 +267,27 @@ TEST(KingMoves, testE2)
 
 TEST(KingMoves, IllegalMove_to_attacked)
 {
-	Position pos;
-
-	// Castle to King is illegal
-	pos.Set("r3k3/8/8/8/2b5/8/8/4K2R w K - 0 1");
-	pos.m_underAttack = 0;
-	BBSet(pos.m_underAttack, SQ_F1);
-	BBSet(pos.m_underAttack, SQ_E2);
-
-	std::vector<Move> moves = KingMoves(StringToSquare("e1"), pos);
-	std::vector<Square> m1, m2;	
-
-	EXPECT_EQ(moves.size(), 3);
+	Game g;
+	g.position("r3k3/8/8/8/2b5/8/8/4K2R w K - 0 1");
+	
+	std::vector<Move> moves = GetAllMoves(g.m_currentPosition);
+	EXPECT_EQ(moves.size(), 12);
 }
 
 TEST(KingMoves, IllegalMoves_underAttack1)
 {
-	Game g;	
-	
+	Game g;
 	g.position("5k2/8/8/1b6/8/8/2N1K3/8 w - - 0 1");
+
 	std::vector<Move> moves = GetAllMoves(g.m_currentPosition);
 	EXPECT_EQ(moves.size(), 6);
 }
 
 TEST(KingMoves, IllegalMoves_underAttack2)
 {
-	Game g;	
-	
+	Game g;
 	g.position("r3k3/8/8/8/8/2b5/8/4K2R w K - 0 1");
+
 	std::vector<Move> moves = GetAllMoves(g.m_currentPosition);
 	EXPECT_EQ(moves.size(), 4);
 }
@@ -308,10 +296,10 @@ TEST(PawnMoves, testE2)
 {
 	Position pos;
 
-	// Rook on E2
+	// Pawn on E2
 	pos.Set("8/8/8/8/8/8/4P3/8 w - - 0 1");
 
-	std::vector<Move> moves = PawnMoves(StringToSquare("e2"), pos);	
+	std::vector<Move> moves = PawnFigure().GetMoves(SQ_E2, pos);	
 	std::vector<Square> m1, m2;	
 
 	for (auto m:moves)

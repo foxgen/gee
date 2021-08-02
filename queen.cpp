@@ -4,12 +4,12 @@
 
 namespace gee {
 
-Bitboard BishopFigure::GetAttacks(Square s, const Position& pos)
+Bitboard QueenFigure::GetAttacks(Square s, const Position& pos)
 {
     Bitboard bb{0};
 
-    bb |= BishopAttacks(s, pos);
-    bb |= RookAttacks(s, pos);
+    bb |= BishopFigure().GetAttacks(s, pos);
+    bb |= RookFigure().GetAttacks(s, pos);
 
     return bb;
 }

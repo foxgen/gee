@@ -9,8 +9,8 @@ namespace gee {
 class Figure
 {
 public:    
-    virtual Bitboard GetAttacks(Square s, const Position& pos) = 0;
-    virtual std::vector<Move> GetMoves(Square s, const Position& Pos);    
+    virtual Bitboard GetAttacks(Square s, const Position& pos) { return 0; };
+    virtual std::vector<Move> GetMoves(Square s, const Position& pos);    
 };
 
 } // gee

@@ -1,7 +1,24 @@
 #include "move.h"
+#include "figure.h"
+#include "bishop.h"
+#include "rook.h"
+#include "knight.h"
+#include "pawn.h"
+#include "queen.h"
+#include "king.h"
 
 namespace gee
 {
+
+Figure fig[] = {
+    PawnFigure(),
+    KnightFigure(),
+    BishopFigure(),
+    RookFigure(),
+    QueenFigure(),
+    KingFigure()
+};
+
 
 std::string Move::to_string()
 {
@@ -87,354 +104,7 @@ void Move::from_string(const std::string &movestr, const Position& pos)
     }
 }
 
-Bitboard RookAttacks(Square s, const Position& pos)
-{
-    Bitboard bb{0};
 
-    auto ProcessMove = [&](Square sq) {       
-        BBSet(bb, sq);
-        // stop if square is occupied
-        return pos.GetPiece(sq) == NO_PIECE;
-    };
-
-    for (Square sq = SQ_UP(s); sq != SQ_MAX; sq = SQ_UP(sq))
-    {
-        if (!ProcessMove(sq))
-            break;
-    }
-
-    for (Square sq = SQ_DOWN(s); sq != SQ_MAX; sq = SQ_DOWN(sq))
-    {        
-        if (!ProcessMove(sq))
-            break;
-    }
-
-    for (Square sq = SQ_LEFT(s); sq != SQ_MAX; sq = SQ_LEFT(sq))
-    {        
-        if (!ProcessMove(sq))
-            break;
-    }
-
-    for (Square sq = SQ_RIGHT(s); sq != SQ_MAX; sq = SQ_RIGHT(sq))
-    {        
-        if (!ProcessMove(sq))
-            break;
-    }
-
-    return bb;
-}
-
-std::vector<Move> RookMoves(Square s, const Position& pos)
-{
-    Color c = GetColor(pos.GetPiece(s));
-    std::vector<Move> moves;
-    Bitboard bb = RookAttacks(s, pos);
-    std::vector<Square> squares = BBGetSquares(bb);
-    for (auto sq : squares)
-    {
-        Piece p = pos.GetPiece(sq);
-        if (GetColor(p) != c)
-            moves.push_back(Move(s, sq));           
-    }
-
-    return moves;
-}
-
-Bitboard BishopAttacks(Square s, const Position& pos)
-{
-    Bitboard bb{0};
-
-    auto ProcessMove = [&](Square sq) {       
-        BBSet(bb, sq);
-        // stop if square is occupied
-        return pos.GetPiece(sq) == NO_PIECE;
-    };
-
-    for (Square sq = SQ_UP(SQ_RIGHT(s)); sq != SQ_MAX; sq = SQ_UP(SQ_RIGHT(sq)))
-    {
-        if (!ProcessMove(sq))
-            break;
-    }
-
-    for (Square sq = SQ_UP(SQ_LEFT(s)); sq != SQ_MAX; sq = SQ_UP(SQ_LEFT(sq)))
-    {
-        if (!ProcessMove(sq))
-            break;
-    }
-
-    for (Square sq = SQ_DOWN(SQ_RIGHT(s)); sq != SQ_MAX; sq = SQ_DOWN(SQ_RIGHT(sq)))
-    {
-        if (!ProcessMove(sq))
-            break;
-    }
-
-    for (Square sq = SQ_DOWN(SQ_LEFT(s)); sq != SQ_MAX; sq = SQ_DOWN(SQ_LEFT(sq)))
-    {
-        if (!ProcessMove(sq))
-            break;
-    }
-
-    return bb;
-}
-
-std::vector<Move> BishopMoves(Square s, const Position& pos)
-{
-    Color c = GetColor(pos.GetPiece(s));
-    std::vector<Move> moves;
-    Bitboard bb = BishopAttacks(s, pos);
-    std::vector<Square> squares = BBGetSquares(bb);
-    for (auto sq : squares)
-    {
-        Piece p = pos.GetPiece(sq);
-        if (GetColor(p) != c)
-            moves.push_back(Move(s, sq));           
-    }
-
-    return moves;
-}
-
-Bitboard KnightAttacks(Square s, const Position& pos)
-{
-    Bitboard bb{0};
-
-    BBSet(bb,SQ_LEFT(SQ_UP(SQ_UP(s))));    
-    BBSet(bb,SQ_RIGHT(SQ_UP(SQ_UP(s))));
-    BBSet(bb,SQ_LEFT(SQ_LEFT(SQ_UP(s))));
-    BBSet(bb,SQ_LEFT(SQ_LEFT(SQ_DOWN(s))));
-    BBSet(bb,SQ_RIGHT(SQ_RIGHT(SQ_UP(s))));
-    BBSet(bb,SQ_RIGHT(SQ_RIGHT(SQ_DOWN(s))));
-    BBSet(bb,SQ_LEFT(SQ_DOWN(SQ_DOWN(s))));
-    BBSet(bb,SQ_RIGHT(SQ_DOWN(SQ_DOWN(s))));
-
-    return bb;
-}
-
-std::vector<Move> KnightMoves(Square s, const Position& pos)
-{
-    Color c = GetColor(pos.GetPiece(s));
-    std::vector<Move> moves;
-    Bitboard bb = KnightAttacks(s, pos);
-    std::vector<Square> squares = BBGetSquares(bb);
-    for (auto sq : squares)
-    {
-        Piece p = pos.GetPiece(sq);
-        if (GetColor(p) != c)
-            moves.push_back(Move(s, sq));           
-    }
-
-    return moves;
-}
-
-Bitboard QueenAttacks(Square s, const Position& pos)
-{
-    Bitboard bb{0};
-
-    bb |= BishopAttacks(s, pos);
-    bb |= RookAttacks(s, pos);
-
-    return bb;
-}
-
-std::vector<Move> QueenMoves(Square s, const Position& pos)
-{
-    std::vector<Move> moves;
-    std::vector<Move> qm = BishopMoves(s, pos);
-
-    moves = RookMoves(s, pos);
-    moves.insert(moves.end(), qm.begin(), qm.end());
-
-    return moves;    
-}
-
-Bitboard KingAttacks(Square s, const Position& pos)
-{
-    Bitboard bb{0};
-
-    BBSet(bb,SQ_LEFT(SQ_UP(s)));
-    BBSet(bb,SQ_LEFT(SQ_DOWN(s)));
-    BBSet(bb,SQ_RIGHT(SQ_UP(s)));    
-    BBSet(bb,SQ_RIGHT(SQ_DOWN(s)));
-    
-    BBSet(bb,SQ_UP(s));
-    BBSet(bb,SQ_DOWN(s));
-    BBSet(bb,SQ_LEFT(s));
-    BBSet(bb,SQ_RIGHT(s));
-
-    return bb;
-}
-
-std::vector<Move> KingMoves(Square s, const Position& pos)
-{
-    Color c = GetColor(pos.GetPiece(s));
-    std::vector<Move> moves;
-    Bitboard bb = KingAttacks(s, pos);
-    std::vector<Square> squares = BBGetSquares(bb);
-    for (auto sq : squares)
-    {
-        Piece p = pos.GetPiece(sq);
-        if (GetColor(p) != c && !BBisSet(pos.m_underAttack, sq))
-            moves.push_back(Move(s, sq));           
-    }
-
-    return moves;    
-}
-
-std::vector<Move> CastleMoves(Color side, const Position& pos)
-{
-    std::vector<Move> moves;
-    
-    Square kingRookSq = (side == WHITE) ? SQ_H1 : SQ_H8;
-    Square queenRookSq = (side == WHITE) ? SQ_A1 : SQ_A8;
-    Square kingSq = (side == WHITE) ? SQ_E1 : SQ_E8;
-    
-    // no castling under attack
-    if (BBisSet(pos.m_underAttack, kingSq))
-        return {};
-
-    // Castling    
-    if ( (side == WHITE && pos.m_whiteCastleKing) ||
-         (side == BLACK && pos.m_blackCastleKing) )  
-    {
-        Square sq_r = SQ_RIGHT(kingSq);
-        Square sq_rr = SQ_RIGHT(sq_r);
-
-        if ( (pos.GetPiece(sq_r)  == NO_PIECE) &&
-             (pos.GetPiece(sq_rr) == NO_PIECE) &&
-              !BBisSet(pos.m_underAttack, sq_r) &&
-              !BBisSet(pos.m_underAttack, sq_rr) )
-        {
-            moves.push_back(Move(kingSq, KING_SIDE));
-        }
-    }
-    if ((side == WHITE && pos.m_whiteCastleQueen) ||
-        (side == BLACK && pos.m_blackCastleQueen) )
-    {
-        Square sq_l = SQ_LEFT(kingSq);
-        Square sq_ll = SQ_LEFT(sq_l);
-        Square sq_lll = SQ_LEFT(sq_ll);
-
-        if ( (pos.GetPiece(sq_l)  == NO_PIECE) &&
-             (pos.GetPiece(sq_ll) == NO_PIECE) &&
-             (pos.GetPiece(sq_lll) == NO_PIECE) &&
-              !BBisSet(pos.m_underAttack, sq_l) &&
-              !BBisSet(pos.m_underAttack, sq_l))
-        {
-            moves.push_back(Move(kingSq, QUEEN_SIDE));
-        }
-    }    
-
-    return moves;    
-}
-
-Bitboard PawnAttacks(Square s, const Position& pos)
-{
-    Color c = GetColor(pos.GetPiece(s));
-    Bitboard bb{0};
-    auto AdvanceMove = (c == WHITE) ? SQ_UP : SQ_DOWN;
-
-    BBSet(bb,AdvanceMove(SQ_LEFT(s)));
-    BBSet(bb,AdvanceMove(SQ_RIGHT(s)));
-
-    return bb;
-}
-
-std::vector<Move> PawnMoves(Square s, const Position& pos)
-{
-    Square sq;
-    Piece p = pos.GetPiece(s);
-    Color baseColor = GetColor(p);
-
-    std::vector<Move> moves;
-
-    auto AdvanceMove = (baseColor == WHITE) ? SQ_UP : SQ_DOWN;
-    bool isStartPosition = ((baseColor == WHITE) && (GetY(s) == 1)) ||
-                           ((baseColor == BLACK) && (GetY(s) == 6));
-
-    bool isPreLastLine = ((baseColor == WHITE) && (GetY(s) == 6)) ||
-                           ((baseColor == BLACK) && (GetY(s) == 1));
-    
-    // small step
-    sq = AdvanceMove(s);
-    if (pos.GetPiece(sq) == NO_PIECE)
-    {
-        if (isPreLastLine)
-        {
-            // PROMOTION
-            for (auto figure : { KNIGHT, BISHOP, ROOK, QUEEN })            
-                moves.push_back(Move(PROMOTION, s, sq, figure));
-        }
-        else
-        {
-            moves.push_back(Move(s, sq));
-        }
-    }
-    
-    // long step
-    if (isStartPosition)
-    {
-        sq = AdvanceMove(AdvanceMove(s));
-        
-        // nearest empty + jumpto empty
-        if (moves.size() > 0 && pos.GetPiece(sq) == NO_PIECE)
-        {
-            moves.push_back(Move(s, sq));
-        }
-    }
-
-    // take
-    sq = AdvanceMove(SQ_LEFT(s));
-
-    if (sq != SQ_MAX )
-    {
-        p = pos.GetPiece(sq);
-        if (GetColor(p) == SwitchColor(baseColor))
-        {
-            if (isPreLastLine)
-            {
-                // PROMOTION
-                for (auto figure : { KNIGHT, BISHOP, ROOK, QUEEN })            
-                    moves.push_back(Move(PROMOTION, s, sq, figure));                    
-            }
-            else
-            {
-                moves.push_back(Move(s, sq));
-            }
-        }
-
-        if (sq == pos.m_passantSQ)
-        {
-            moves.push_back(Move(ENPASSANT, s, sq));
-        }
-    }        
-
-    sq = AdvanceMove(SQ_RIGHT(s));
-    
-    if (sq != SQ_MAX )
-    {
-        p = pos.GetPiece(sq);
-        if (GetColor(p) == SwitchColor(baseColor))
-        {
-            if (isPreLastLine)
-            {
-                // PROMOTION
-                for (auto figure : { KNIGHT, BISHOP, ROOK, QUEEN })            
-                    moves.push_back(Move(PROMOTION, s, sq, figure));            
-            }
-            else
-            {
-                moves.push_back(Move(s, sq));
-            }
-        }
-
-        if (sq == pos.m_passantSQ)
-        {
-            moves.push_back(Move(ENPASSANT, s, sq));
-        }
-    }
-    
-    
-    return moves;
-}
 
 Bitboard GetAttacks(Position& pos, Color side)
 {
@@ -445,31 +115,7 @@ Bitboard GetAttacks(Position& pos, Color side)
         PieceType type = GetPieceType(p);
         
         if (side == GetColor(p))
-        {
-            switch (type)
-            {
-            case PAWN:
-                attacks |= PawnAttacks(sq, pos);
-                break;
-            case ROOK:
-                attacks |= RookAttacks(sq, pos);
-                break;
-            case BISHOP:
-                attacks |= BishopAttacks(sq, pos);
-                break;
-            case QUEEN:
-                attacks |= QueenAttacks(sq, pos);
-                break;
-            case KNIGHT:
-                attacks |= KnightAttacks(sq, pos);
-                break;
-            case KING:
-                attacks |= KingAttacks(sq, pos);
-                break;
-            default:
-                break;
-            }
-        }
+            attacks |= fig[type].GetAttacks(sq, pos);
     }
 
     return attacks;
@@ -484,7 +130,7 @@ std::vector<Move> GetAllMoves(Position& pos, Color side)
 {    
     std::vector<Move> m;
     std::vector<Move> moves;
-
+    
     pos.m_attacks = GetAttacks(pos, side);
     pos.m_underAttack = GetAttacks(pos, SwitchColor(side));
 
@@ -493,37 +139,14 @@ std::vector<Move> GetAllMoves(Position& pos, Color side)
         Piece p = pos.GetPiece(sq);
         PieceType type = GetPieceType(p);
         
+
         if (side == GetColor(p))
         {
-            switch (type)
-            {
-            case PAWN:
-                m = PawnMoves(sq, pos);
-                break;
-            case ROOK:
-                m = RookMoves(sq, pos);
-                break;
-            case BISHOP:
-                m = BishopMoves(sq, pos);
-                break;
-            case QUEEN:
-                m = QueenMoves(sq, pos);
-                break;
-            case KNIGHT:
-                m = KnightMoves(sq, pos);
-                break;
-            case KING:
-                m = KingMoves(sq, pos);
-                break;
-            default:
-                break;
-            }
+            m = fig[type].GetMoves(sq, pos);
+            
             moves.insert(moves.end(), m.begin(), m.end());
         }
     }
-
-    m = CastleMoves(side, pos);
-    moves.insert(moves.end(), m.begin(), m.end());
 
     moves.erase(std::remove_if(
         moves.begin(),

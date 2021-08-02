@@ -7,7 +7,7 @@ namespace gee {
 class QueenFigure : public Figure
 {
 public:
-    virtual Bitboard GetAttacks(Square s, const Position& pos);    
+    virtual Bitboard GetAttacks(Square s, const Position& pos);
 };
 
 } // gee

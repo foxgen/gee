@@ -18,6 +18,7 @@ add_library(genchesslib
 	types.h
 )
 
+
 # build main application
 add_executable(genchess 
 	main.cpp
