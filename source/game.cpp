@@ -33,7 +33,7 @@ int Game::newgame(const std::string& fen)
 
 std::string Game::bestmove()
 {    
-    std::vector<Move> moves = GetAllMoves(m_currentPosition);
+    std::vector<Move> moves = m_currentPosition.GetAllMoves();
     GetLogger() << "size = " << (int)moves.size() << std::endl;    
     int rn = getRandomNumber(0, moves.size()-1);
     Move m = moves[rn];

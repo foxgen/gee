@@ -50,25 +50,6 @@ static std::ostream& operator << (std::ostream& os, Move& move)
     return os;
 }
 
-Bitboard RookAttacks(Square s, const Position& pos);
-Bitboard BishopAttacks(Square s, const Position& pos);
-Bitboard QueenAttacks(Square s, const Position& pos);
-Bitboard KnightAttacks(Square s, const Position& pos);
-Bitboard KingAttacks(Square s, const Position& pos);
-Bitboard PawnAttacks(Square s, const Position& pos);
-
-std::vector<Move> RookMoves(Square s, const Position& pos);
-std::vector<Move> BishopMoves(Square s, const Position& pos);
-std::vector<Move> QueenMoves(Square s, const Position& pos);
-std::vector<Move> KnightMoves(Square s, const Position& pos);
-std::vector<Move> KingMoves(Square s, const Position& pos);
-std::vector<Move> CastleMoves(Color side, const Position& pos);
-std::vector<Move> PawnMoves(Square s, const Position& pos);
-
-std::vector<Move> GetAllMoves(Position& pos, Color side);
-std::vector<Move> GetAllMoves(Position& pos);
-Bitboard GetAttacks(Position& pos, Color side);
-Bitboard GetAttacks(Position& pos);
 
 //--------------------------------------------------------------------------------
 

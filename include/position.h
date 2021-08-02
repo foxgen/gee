@@ -28,7 +28,10 @@ public:
     
     Square FindKing(Color c);
     std::vector<Move> GetAllMoves(Color side);
-
+    std::vector<Move> GetAllMoves();
+    Bitboard GetAttacks(Color side);    
+    Bitboard GetAttacks();
+    
     Piece m_board[SQ_MAX];
     Color m_sideToMove;
     Square m_passantSQ;
@@ -45,6 +48,5 @@ public:
     Bitboard m_attacks{0};
     Bitboard m_underAttack{0};
 };
-
 
 } // gee

@@ -1,9 +1,24 @@
 #include "position.h"
 #include "move.h"
 #include "figure.h"
+#include "bishop.h"
+#include "rook.h"
+#include "knight.h"
+#include "pawn.h"
+#include "queen.h"
+#include "king.h"
 
 namespace gee
 {
+
+std::array<std::unique_ptr<Figure>, 6> fig = {
+    std::make_unique<PawnFigure>(),
+    std::make_unique<KnightFigure>(),
+    std::make_unique<BishopFigure>(),
+    std::make_unique<RookFigure>(),
+    std::make_unique<QueenFigure>(),
+    std::make_unique<KingFigure>()
+};
 
 std::ostream& operator << (std::ostream& os, const Position& p)
 {
@@ -289,10 +304,68 @@ bool Position::ApplyMove(Move&& move)
     return false;
 }
 
+Bitboard Position::GetAttacks()
+{
+    return GetAttacks(m_sideToMove);
+}
+
+Bitboard Position::GetAttacks(Color side)
+{
+    Bitboard attacks{0};
+    for (Square sq = SQ_A1; sq != SQ_MAX; sq = static_cast<Square>(sq+1))
+    {
+        Piece p = GetPiece(sq);
+        PieceType type = GetPieceType(p);
+        
+        if (side == GetColor(p))
+            attacks |= fig[type-1]->GetAttacks(sq, *this);
+    }
+
+    return attacks;
+}
+
+std::vector<Move> Position::GetAllMoves()
+{
+    return GetAllMoves(m_sideToMove);
+}
 
 std::vector<Move> Position::GetAllMoves(Color side)
 {
+    std::vector<Move> m;
     std::vector<Move> moves;
+    
+    m_attacks = GetAttacks(side);
+    m_underAttack = GetAttacks(SwitchColor(side));
+
+    for (Square sq = SQ_A1; sq != SQ_MAX; sq = static_cast<Square>(sq+1))
+    {
+        Piece p = GetPiece(sq);
+        PieceType type = GetPieceType(p);
+        
+
+        if (side == GetColor(p))
+        {
+            m = fig[type-1]->GetMoves(sq, *this);
+            
+            moves.insert(moves.end(), m.begin(), m.end());
+        }
+    }
+
+    moves.erase(std::remove_if(
+        moves.begin(),
+        moves.end(),
+        [&](Move& m){
+                Position testPos = *this;
+                
+                testPos.ApplyMove(Move(m));
+                Square kingSq = testPos.FindKing(side);
+                testPos.SwitchSide();
+
+                Bitboard attacks = testPos.GetAttacks(SwitchColor(side));
+                return BBisSet(attacks, kingSq);                
+        }),
+        moves.end()
+        );
 
     return moves;            
 }

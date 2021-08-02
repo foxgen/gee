@@ -10,7 +10,6 @@
 #include "queen.h"
 #include "king.h"
 
-
 namespace gee
 {
 
