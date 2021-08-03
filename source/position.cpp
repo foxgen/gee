@@ -217,7 +217,7 @@ Square Position::FindKing(Color c)
     return SQ_MAX;
 }
 
-bool Position::ApplyMove(Move&& move)
+bool Position::ApplyMove(const Move& move)
 {
     Piece p = m_board[move.m_from];
     Color c = GetColor(p);

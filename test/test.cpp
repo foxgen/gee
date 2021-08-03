@@ -398,7 +398,7 @@ TEST(PlayTheGame, test2)
 	Game game;
 	game.position("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
-	std::string input = "position startpos moves b1a3 f7f5 b2b3 b8c6 f2f4 d7d5 c2c4 e8f7 a3b5 a8b8 e1f2 d8d7 b3b4 d7e8 a2a3 d5d4 c1b2 e7e6 d1c1 c6e7 e2e4 d4e3 f2e2 e3d2 c1d1";
+	std::string input = "b1a3 f7f5 b2b3 b8c6 f2f4 d7d5 c2c4 e8f7 a3b5 a8b8 e1f2 d8d7 b3b4 d7e8 a2a3 d5d4 c1b2 e7e6 d1c1 c6e7 e2e4 d4e3 f2e2 e3d2 c1d1";
 	std::istringstream iss(input);
 
 	while (!iss.eof())
@@ -408,7 +408,7 @@ TEST(PlayTheGame, test2)
 		GetLogger() << movestr << std::endl;
 		Move m;
 		m.from_string(movestr, game.m_currentPosition);
-		game.m_currentPosition.ApplyMove(std::move(m));
+		game.m_currentPosition.ApplyMove(m);
 		game.m_currentPosition.SwitchSide();
 	}
 

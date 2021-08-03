@@ -23,7 +23,7 @@ public:
     void ClearSquare(Square s);
     void RemovePiece(Piece pc, Square s);
     void MovePiece(Piece pc, Square from, Square to);
-    bool ApplyMove(Move&& move);
+    bool ApplyMove(const Move& move);
     void SwitchSide();
     
     Square FindKing(Color c);
