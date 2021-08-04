@@ -2,7 +2,6 @@
 
 namespace gee
 {
-
 int Game::go()
 {
     GetLogger() << "go\n";
@@ -22,31 +21,31 @@ int Game::stop()
 }
 
 int Game::newgame(const std::string& fen)
-{
+{    
     srand(static_cast<unsigned int>(time(0)));
 
-    position(fen);
-    m_startPosition = m_currentPosition;
+    m_currentPosition = std::make_unique<Position>(fen);    
+    m_startPosition   = std::make_unique<Position>(*m_currentPosition);
 
     return 0;
 }
 
 std::string Game::bestmove()
 {    
-    std::vector<Move> moves = m_currentPosition.GetAllMoves();
+    std::vector<Move> moves = m_currentPosition->GetAllMoves();
     GetLogger() << "size = " << (int)moves.size() << std::endl;    
     int rn = getRandomNumber(0, moves.size()-1);
     Move m = moves[rn];
 
-    m_currentPosition.ApplyMove(std::move(m));   
-    m_currentPosition.SwitchSide();
+    m_currentPosition->ApplyMove(std::move(m));   
+    m_currentPosition->SwitchSide();
     
     return m.to_string();
 }
 
 int Game::position(const std::string& fen)
 {
-    m_currentPosition.Set(fen);
+    m_currentPosition->Set(fen);
     
     return 0;
 }

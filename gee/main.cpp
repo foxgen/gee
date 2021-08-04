@@ -84,12 +84,12 @@ int main(int argc, char *argv[])
                 iss >> movestr;
                 GetLogger() << movestr << std::endl;
                 Move m;
-                m.from_string(movestr, game.m_currentPosition);
-                game.m_currentPosition.ApplyMove(std::move(m));
-                game.m_currentPosition.SwitchSide();
+                m.from_string(movestr, *game.m_currentPosition);
+                game.m_currentPosition->ApplyMove(m);
+                game.m_currentPosition->SwitchSide();
             }                        
             
-            GetLogger() << game.m_currentPosition.fen() << std::endl;
+            GetLogger() << game.m_currentPosition->fen() << std::endl;
         }
 
         if (cmd == "go")

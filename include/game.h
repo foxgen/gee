@@ -15,16 +15,7 @@ namespace gee
 
 class Game
 {
-public:
-    Position m_startPosition;
-    Position m_currentPosition;
-
-    int m_threadCount;
-    int m_searchDepth;
-    int m_searchNodes;
-
-    int m_searchMateIn;
-    int m_moveTime; // msec
+public:    
 
     int     go();
     int     stop();
@@ -34,12 +25,19 @@ public:
     int     uci();
 
 public:
-    // currect context
 
-public:
+    int m_threadCount;
+    int m_searchDepth;
+    int m_searchNodes;
+
+    int m_searchMateIn;
+    int m_moveTime; // msec
     std::condition_variable m_cv;
     std::mutex m_lock;
     std::atomic<bool> m_thinking;
+
+    std::unique_ptr<Position> m_startPosition;
+    std::unique_ptr<Position> m_currentPosition;
     std::vector<Move> m_gameMoves;
 };
 

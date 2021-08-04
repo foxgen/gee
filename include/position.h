@@ -12,6 +12,7 @@ class Position
 {
 public:
     Position() = default; 
+    Position(const std::string& fen);
 
 public:
     std::string fen() const;
@@ -47,6 +48,15 @@ public:
 
     Bitboard m_attacks{0};
     Bitboard m_underAttack{0};
+};
+
+
+class PositionFactory
+{
+public:
+    PositionFactory() = default;
+
+    std::unique_ptr<Position> GreatePosition();
 };
 
 } // gee

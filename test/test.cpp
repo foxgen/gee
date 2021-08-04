@@ -268,27 +268,27 @@ TEST(KingMoves, testE2)
 TEST(KingMoves, IllegalMove_to_attacked)
 {
 	Game g;
-	g.position("r3k3/8/8/8/2b5/8/8/4K2R w K - 0 1");
+	g.newgame("r3k3/8/8/8/2b5/8/8/4K2R w K - 0 1");
 	
-	std::vector<Move> moves = g.m_currentPosition.GetAllMoves();
+	std::vector<Move> moves = g.m_currentPosition->GetAllMoves();
 	EXPECT_EQ(moves.size(), 12);
 }
 
 TEST(KingMoves, IllegalMoves_underAttack1)
 {
 	Game g;
-	g.position("5k2/8/8/1b6/8/8/2N1K3/8 w - - 0 1");
+	g.newgame("5k2/8/8/1b6/8/8/2N1K3/8 w - - 0 1");
 
-	std::vector<Move> moves = g.m_currentPosition.GetAllMoves();
+	std::vector<Move> moves = g.m_currentPosition->GetAllMoves();
 	EXPECT_EQ(moves.size(), 6);
 }
 
 TEST(KingMoves, IllegalMoves_underAttack2)
 {
 	Game g;
-	g.position("r3k3/8/8/8/8/2b5/8/4K2R w K - 0 1");
+	g.newgame("r3k3/8/8/8/8/2b5/8/4K2R w K - 0 1");
 
-	std::vector<Move> moves = g.m_currentPosition.GetAllMoves();
+	std::vector<Move> moves = g.m_currentPosition->GetAllMoves();
 	EXPECT_EQ(moves.size(), 4);
 }
 
@@ -322,9 +322,9 @@ TEST(AllMoves, test1)
 {
 	Game g;	
 	
-	g.position("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
+	g.newgame("rnbqkbnr/pppppppp/8/8/4P3/8/PPPP1PPP/RNBQKBNR w KQkq - 0 1");
 
-	std::vector<Move> moves = g.m_currentPosition.GetAllMoves();
+	std::vector<Move> moves = g.m_currentPosition->GetAllMoves();
 	
 	EXPECT_EQ(moves.size(), 30);
 }
@@ -332,16 +332,16 @@ TEST(AllMoves, test1)
 TEST(AllMoves, test2)
 {
 	Game g;	
-	g.position("r3k2r/ppp1n1pp/2n2p2/4p3/P1Q2P1P/6q1/RB1Nb1B1/4K1NR w KQkq - 0 1");
-	std::vector<Move> moves = g.m_currentPosition.GetAllMoves();
+	g.newgame("r3k2r/ppp1n1pp/2n2p2/4p3/P1Q2P1P/6q1/RB1Nb1B1/4K1NR w KQkq - 0 1");
+	std::vector<Move> moves = g.m_currentPosition->GetAllMoves();
 	EXPECT_EQ(moves.size(), 1);
 }
 
 TEST(AllMoves, test3)
 {
 	Game g;	
-	g.position("7R/1p6/2PN2p1/p1PNk1N1/8/n7/PP4P1/4R1K1 b - - 0 1");
-	std::vector<Move> moves = g.m_currentPosition.GetAllMoves();
+	g.newgame("7R/1p6/2PN2p1/p1PNk1N1/8/n7/PP4P1/4R1K1 b - - 0 1");
+	std::vector<Move> moves = g.m_currentPosition->GetAllMoves();
 	EXPECT_EQ(moves.size(), 2);
 }
 
@@ -374,7 +374,7 @@ TEST(MovesConversion, MovesConversion)
 TEST(PlayTheGame, test1)
 {	
 	Game game;
-	game.position("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	game.newgame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
 	std::string input = "h2h4 h7h6 c2c4 f7f5 e2e3 c7c5 f1d3 f5f4 d3e4 a7a6 d1c2 d7d6 e4f3 b7b5 b2b4 c8h3 b1a3 e7e6 d2d3 d8a5 f3e4 b5c4 c2e2 e8d8 e4h7 a8a7 h7g8 h3g4 g2g3 d8e7 e2d2 a5a3 h1h2 a3b3 h2h3 g4d1 a1b1 d1e2 d2e2 g7g5 g8e6 f4e3 b4b5 a7b7 e6c4 b8d7 f2f3 b7b6 b1b3 e7e8 e2d1 d7e5 d3d4 b6c6 d4d5 e8d7 g1e2 e5d3 e1f1 g5h4 d1c2 d7d8 c2d3 f8g7 f1e1 d8e7 d3c2 h8e8 a2a4 g7c3 b3c3 e8c8 b5c6 e7f6 c4d3";
 	std::istringstream iss(input);
@@ -385,18 +385,18 @@ TEST(PlayTheGame, test1)
 		iss >> movestr;
 		GetLogger() << movestr << std::endl;
 		Move m;
-		m.from_string(movestr, game.m_currentPosition);
-		game.m_currentPosition.ApplyMove(std::move(m));
-		game.m_currentPosition.SwitchSide();
+		m.from_string(movestr, *game.m_currentPosition);
+		game.m_currentPosition->ApplyMove(std::move(m));
+		game.m_currentPosition->SwitchSide();
 	}
 
-	std::vector<Move> moves = game.m_currentPosition.GetAllMoves();
+	std::vector<Move> moves = game.m_currentPosition->GetAllMoves();
 }
 
 TEST(PlayTheGame, test2)
 {	
 	Game game;
-	game.position("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	game.newgame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
 	std::string input = "b1a3 f7f5 b2b3 b8c6 f2f4 d7d5 c2c4 e8f7 a3b5 a8b8 e1f2 d8d7 b3b4 d7e8 a2a3 d5d4 c1b2 e7e6 d1c1 c6e7 e2e4 d4e3 f2e2 e3d2 c1d1";
 	std::istringstream iss(input);
@@ -407,12 +407,12 @@ TEST(PlayTheGame, test2)
 		iss >> movestr;
 		GetLogger() << movestr << std::endl;
 		Move m;
-		m.from_string(movestr, game.m_currentPosition);
-		game.m_currentPosition.ApplyMove(m);
-		game.m_currentPosition.SwitchSide();
+		m.from_string(movestr, *game.m_currentPosition);
+		game.m_currentPosition->ApplyMove(m);
+		game.m_currentPosition->SwitchSide();
 	}
 
-	std::vector<Move> moves = game.m_currentPosition.GetAllMoves();
+	std::vector<Move> moves = game.m_currentPosition->GetAllMoves();
 
-	EXPECT_EQ(game.m_currentPosition.GetPiece(SQ_E4), NO_PIECE);
+	EXPECT_EQ(game.m_currentPosition->GetPiece(SQ_E4), NO_PIECE);
 }

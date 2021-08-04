@@ -20,6 +20,11 @@ std::array<std::unique_ptr<Figure>, 6> fig = {
     std::make_unique<KingFigure>()
 };
 
+Position::Position(const std::string& fen)
+{
+    Set(fen);
+}
+
 std::ostream& operator << (std::ostream& os, const Position& p)
 {
     for (int r = 0; r < 8; r++)
