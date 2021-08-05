@@ -150,8 +150,10 @@ TEST(RookMoves, testE2)
 	}
 
 	for (auto m : {"e1", "e3", "e4", "e5", "e6", "e7", "e8", 
-					"a2", "b2", "c2", "d2", "f2", "g2", "h2"})	
+					"a2", "b2", "c2", "d2", "f2", "g2", "h2"})
+	{	
 		m2.push_back(StringToSquare(m));
+	}
 
 	std::sort(m1.begin(), m1.end());
 	std::sort(m2.begin(), m2.end());
@@ -352,18 +354,11 @@ TEST(MovesConversion, MovesConversion)
 	Position pos;
 	pos.Set("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
-	Move m;
-	m.from_string("e2e4", pos);
-	EXPECT_TRUE(m == Move(NORMAL, SQ_E2, SQ_E4));	
-	
-	m.from_string("a7a8q", pos);
-	EXPECT_TRUE(m == Move(PROMOTION, SQ_A7, SQ_A8, QUEEN));	
-	m.from_string("a7a8r", pos);
-	EXPECT_TRUE(m == Move(PROMOTION, SQ_A7, SQ_A8, ROOK));
-	m.from_string("a7a8n", pos);
-	EXPECT_TRUE(m == Move(PROMOTION, SQ_A7, SQ_A8, KNIGHT));
-	m.from_string("a7a8b", pos);
-	EXPECT_TRUE(m == Move(PROMOTION, SQ_A7, SQ_A8, BISHOP));
+	EXPECT_TRUE(Move().from_string("e2e4", pos) == Move(NORMAL, SQ_E2, SQ_E4));
+	EXPECT_TRUE(Move().from_string("a7a8q", pos) == Move(PROMOTION, SQ_A7, SQ_A8, QUEEN));	
+	EXPECT_TRUE(Move().from_string("a7a8r", pos) == Move(PROMOTION, SQ_A7, SQ_A8, ROOK));
+	EXPECT_TRUE(Move().from_string("a7a8n", pos) == Move(PROMOTION, SQ_A7, SQ_A8, KNIGHT));
+	EXPECT_TRUE(Move().from_string("a7a8b", pos) == Move(PROMOTION, SQ_A7, SQ_A8, BISHOP));
 
 	EXPECT_EQ(Move(SQ_E1, KING_SIDE).to_string(),"e1g1");
 	EXPECT_EQ(Move(SQ_E8, KING_SIDE).to_string(),"e8g8");
@@ -373,8 +368,8 @@ TEST(MovesConversion, MovesConversion)
 
 TEST(PlayTheGame, test1)
 {	
-	Game game;
-	game.newgame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	Game g;
+	g.newgame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
 	std::string input = "h2h4 h7h6 c2c4 f7f5 e2e3 c7c5 f1d3 f5f4 d3e4 a7a6 d1c2 d7d6 e4f3 b7b5 b2b4 c8h3 b1a3 e7e6 d2d3 d8a5 f3e4 b5c4 c2e2 e8d8 e4h7 a8a7 h7g8 h3g4 g2g3 d8e7 e2d2 a5a3 h1h2 a3b3 h2h3 g4d1 a1b1 d1e2 d2e2 g7g5 g8e6 f4e3 b4b5 a7b7 e6c4 b8d7 f2f3 b7b6 b1b3 e7e8 e2d1 d7e5 d3d4 b6c6 d4d5 e8d7 g1e2 e5d3 e1f1 g5h4 d1c2 d7d8 c2d3 f8g7 f1e1 d8e7 d3c2 h8e8 a2a4 g7c3 b3c3 e8c8 b5c6 e7f6 c4d3";
 	std::istringstream iss(input);
@@ -383,20 +378,18 @@ TEST(PlayTheGame, test1)
 	{
 		std::string movestr;
 		iss >> movestr;
-		GetLogger() << movestr << std::endl;
-		Move m;
-		m.from_string(movestr, *game.m_currentPosition);
-		game.m_currentPosition->ApplyMove(std::move(m));
-		game.m_currentPosition->SwitchSide();
+		GetLogger() << movestr << std::endl;		
+		g.m_currentPosition->ApplyMove(Move().from_string(movestr, *g.m_currentPosition));
+		g.m_currentPosition->SwitchSide();
 	}
 
-	std::vector<Move> moves = game.m_currentPosition->GetAllMoves();
+	std::vector<Move> moves = g.m_currentPosition->GetAllMoves();
 }
 
 TEST(PlayTheGame, test2)
 {	
-	Game game;
-	game.newgame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
+	Game g;
+	g.newgame("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1");
 
 	std::string input = "b1a3 f7f5 b2b3 b8c6 f2f4 d7d5 c2c4 e8f7 a3b5 a8b8 e1f2 d8d7 b3b4 d7e8 a2a3 d5d4 c1b2 e7e6 d1c1 c6e7 e2e4 d4e3 f2e2 e3d2 c1d1";
 	std::istringstream iss(input);
@@ -406,13 +399,11 @@ TEST(PlayTheGame, test2)
 		std::string movestr;
 		iss >> movestr;
 		GetLogger() << movestr << std::endl;
-		Move m;
-		m.from_string(movestr, *game.m_currentPosition);
-		game.m_currentPosition->ApplyMove(m);
-		game.m_currentPosition->SwitchSide();
+		g.m_currentPosition->ApplyMove(Move().from_string(movestr, *g.m_currentPosition));
+		g.m_currentPosition->SwitchSide();
 	}
 
-	std::vector<Move> moves = game.m_currentPosition->GetAllMoves();
+	std::vector<Move> moves = g.m_currentPosition->GetAllMoves();
 
-	EXPECT_EQ(game.m_currentPosition->GetPiece(SQ_E4), NO_PIECE);
+	EXPECT_EQ(g.m_currentPosition->GetPiece(SQ_E4), NO_PIECE);
 }

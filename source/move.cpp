@@ -41,7 +41,7 @@ std::string Move::to_string()
     return "0000";   
 }
 
-void Move::from_string(const std::string &movestr, const Position& pos)
+Move& Move::from_string(const std::string &movestr, const Position& pos)
 {
     // By default the move is NORMAL
     m_from = StringToSquare(movestr);
@@ -92,6 +92,8 @@ void Move::from_string(const std::string &movestr, const Position& pos)
         if (m_to == pos.m_passantSQ)
             m_type = ENPASSANT;
     }
+
+    return *this;
 }
 
 } // gee

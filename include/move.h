@@ -38,7 +38,7 @@ public:
     }
 
     std::string to_string();
-    void from_string(const std::string& movestr, const Position& pos);
+    Move& from_string(const std::string& movestr, const Position& pos);
 
     int m_score;
 };
