@@ -64,24 +64,17 @@ TEST(FenTest, MovesTest)
 
 TEST(FenTest, FenTest)
 {	
-	std::string fen1 = "rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1";
-    std::string fen2 = "rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1";
-    std::string fen3 = "r2qkb1r/ppp1pppp/2n2n2/3p1b2/P7/4PN2/1PPPBPPP/RNBQ1RK1 b kq - 4 5";
-    std::string fen4 = "3r1rk1/1p3ppp/p7/4bN2/1n2P3/2P3P1/1P4BP/1K1RR3 w - - 2 25";
-
-	Position p;
-
-	p.Set(fen1);
-	EXPECT_EQ(p.fen(), fen1);
-
-	p.Set(fen2);
-	EXPECT_EQ(p.fen(), fen2);
-
-	p.Set(fen3);
-	EXPECT_EQ(p.fen(), fen3);
-
-	p.Set(fen4);
-	EXPECT_EQ(p.fen(), fen4);
+	std::vector<std::string> fens =  {
+		"rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1",
+    	"rnbqkbnr/pppppppp/8/8/P7/8/1PPPPPPP/RNBQKBNR b KQkq - 0 1",
+    	"r2qkb1r/ppp1pppp/2n2n2/3p1b2/P7/4PN2/1PPPBPPP/RNBQ1RK1 b kq - 4 5",
+     	"3r1rk1/1p3ppp/p7/4bN2/1n2P3/2P3P1/1P4BP/1K1RR3 w - - 2 25"
+	};
+	
+	for (auto& f : fens)
+	{
+		EXPECT_EQ(Position().Set(f).fen(), f);
+	}
 }
 
 TEST(MovesTest, UpTests)

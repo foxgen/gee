@@ -41,7 +41,7 @@ std::ostream& operator << (std::ostream& os, const Position& p)
 }
 
 // rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1
-void Position::Set(const std::string& fen)
+Position& Position::Set(const std::string& fen)
 {   
     const std::string figures = "rnbqkRNBQKpP";
 
@@ -57,7 +57,7 @@ void Position::Set(const std::string& fen)
     else 
     {
         GetLogger() << "fen error\n";
-        return;
+        return *this;
     }
     // Castling    
     m_whiteCastleKing = (std::string::npos != tokens[2].find('K'));        
@@ -111,6 +111,8 @@ void Position::Set(const std::string& fen)
             }
         }
     }
+
+    return *this;
 }
 
 std::string Position::fen() const

@@ -16,7 +16,7 @@ public:
 
 public:
     std::string fen() const;
-    void Set(const std::string& fen);
+    Position& Set(const std::string& fen);
 
 public:
     Piece GetPiece(Square s) const;    
