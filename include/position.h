@@ -26,13 +26,16 @@ public:
     void MovePiece(Piece pc, Square from, Square to);
     bool ApplyMove(const Move& move);
     void SwitchSide();
-    
+
+public:    
     Square FindKing(Color c);
     std::vector<Move> GetAllMoves(Color side);
     std::vector<Move> GetAllMoves();
     Bitboard GetAttacks(Color side);    
     Bitboard GetAttacks();
-    
+
+
+public:
     Piece m_board[SQ_MAX];
     Color m_sideToMove;
     Square m_passantSQ;

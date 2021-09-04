@@ -400,3 +400,62 @@ TEST(PlayTheGame, test2)
 
 	EXPECT_EQ(g.m_currentPosition->GetPiece(SQ_E4), NO_PIECE);
 }
+
+TEST(TreeTest, node)
+{
+	Node head(1,1);
+	head.AddChild(Node(2,2));
+	head.AddChild(Node(3,3).AddChild(Node(4,4)).AddChild(Node(5,5)));
+	head.AddChild(Node(6,6));
+
+	head.PrintTree();
+	std::cout << std::endl;
+}
+
+TEST(TreeTest, values)
+{
+	Node head(Node(1,0)
+			.AddChild(Node(2,0))
+			.AddChild(Node(3,0)
+				.AddChild(Node(4,0))
+				.AddChild(Node(5,0))
+				.AddChild(Node(6,0)
+					.AddChild(Node(7,0)
+						.AddChild(Node(8,4))
+						.AddChild(Node(9,5))
+						.AddChild(Node(10,13))
+						.AddChild(Node(11,7))
+						.AddChild(Node(12,8))
+						.AddChild(Node(13,9))
+						)
+					.AddChild(Node(14,0)
+						.AddChild(Node(15,-1))
+						.AddChild(Node(16,-2))
+						.AddChild(Node(17,-3))
+						.AddChild(Node(18,-4))
+						.AddChild(Node(19,-5))
+						.AddChild(Node(20,-6))
+						)
+					.AddChild(Node(21,0)
+						.AddChild(Node(22,1))
+						.AddChild(Node(23,2))
+						.AddChild(Node(24,300))
+						.AddChild(Node(25,5))
+						.AddChild(Node(26,6))
+						.AddChild(Node(27,7))
+						)
+					)
+				)
+			.AddChild(Node(28,0)
+				.AddChild(Node(29,200))
+				.AddChild(Node(30,300))
+				.AddChild(Node(31,400))
+				)
+			);
+
+	// head.PrintTree();
+	Node& n = GetBestNode(head);
+	std::cout << "best = " << n.m_id << std::endl;
+
+	std::cout << std::endl;
+}

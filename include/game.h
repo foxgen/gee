@@ -9,6 +9,7 @@
 #include "pawn.h"
 #include "queen.h"
 #include "king.h"
+#include "node.h"
 
 namespace gee
 {
@@ -37,7 +38,7 @@ public:
     std::atomic<bool> m_thinking;
 
     std::unique_ptr<Position> m_startPosition;
-    std::unique_ptr<Position> m_currentPosition;
+    std::shared_ptr<Position> m_currentPosition;
     std::vector<Move> m_gameMoves;
 };
 
