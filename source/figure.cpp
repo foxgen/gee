@@ -10,10 +10,12 @@ namespace gee {
 
 std::vector<Move> Figure::GetMoves(Square s, const Position& pos)
 {
-    Color c = GetColor(pos.GetPiece(s));
     std::vector<Move> moves;
+
+    Color c = GetColor(pos.GetPiece(s));    
     Bitboard bb = GetAttacks(s, pos);
     std::vector<Square> squares = BBGetSquares(bb);
+    
     for (auto sq : squares)
     {
         Piece p = pos.GetPiece(sq);

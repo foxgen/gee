@@ -1,27 +1,12 @@
 #pragma once
+
 #include <cstdint>
-#include <vector>
-#include <string>
-#include <mutex>
-#include <chrono>
-#include <utility>
-#include <algorithm>
-#include <iostream>
-#include <stdexcept>
-#include <sstream>
 
 namespace gee
 {
 
 enum Color {
     NO_COLOR, WHITE, BLACK
-};
-
-inline Color SwitchColor(Color c)
-{
-  if (c==WHITE) return BLACK;
-  else if (c==BLACK) return WHITE;
-  return c;    
 };
 
 enum CastlingSide {
@@ -33,23 +18,8 @@ enum PieceType {
 };
 
 enum MoveType {
-  NORMAL,
-  PROMOTION = 1 << 14,
-  ENPASSANT = 2 << 14,
-  CASTLING  = 3 << 14
+  NORMAL=0, PROMOTION, ENPASSANT,CASTLING
 };
-
-inline const char* MoveTypeStr(MoveType mt)
-{
-  switch(mt)
-  {
-    case NORMAL : return "NORMAL";
-    case PROMOTION : return "PROMOTION";
-    case ENPASSANT : return "ENPASSANT";
-    case CASTLING : return "CASTLING";    
-  }
-  return "----";
-}
 
 enum Square {
   SQ_A1=0, SQ_B1, SQ_C1, SQ_D1, SQ_E1, SQ_F1, SQ_G1, SQ_H1,
@@ -64,30 +34,6 @@ enum Square {
   SQ_MAX
 };
 
-static inline int GetX(Square s) {
-  return s % 8;
-};
-
-static inline int GetY(Square s) {
-  return s / 8;
-};
-
-// #define SQ_UP(s)    ( (s != SQ_MAX) && (s < SQ_A8) ? static_cast<Square>(s + 8) : SQ_MAX )
-static inline Square SQ_UP(Square s) { 
-  return ( (s != SQ_MAX) && (s < SQ_A8) ? static_cast<Square>(s + 8) : SQ_MAX );
-};
-
-static inline Square SQ_DOWN(Square s)  {
-  return ( (s != SQ_MAX) && (s > SQ_H1) ? static_cast<Square>(s - 8) : SQ_MAX );
-};
-static inline Square SQ_LEFT(Square s)  {
-  return ( (s != SQ_MAX) && (s % SQ_A2) ? static_cast<Square>(s - 1) : SQ_MAX );
-};
-
-static inline Square SQ_RIGHT(Square s)  {
-  return ( (s != SQ_MAX) && ((s+1) % 8) ? static_cast<Square>(s + 1) : SQ_MAX );
-};
-
 enum Piece {
   NO_PIECE,
   W_PAWN = 1, W_KNIGHT, W_BISHOP, W_ROOK, W_QUEEN, W_KING,
@@ -95,25 +41,6 @@ enum Piece {
   PIECE_NB = 16
 };
 
-static inline PieceType GetPieceType(Piece p)
-{
-  return static_cast<PieceType>(p & ~8);
-}
-
-inline Piece MakePiece(PieceType t, Color c)
-{
-  int applyCol = (c == BLACK) ? 8 : 0;
-  return static_cast<Piece>(t | applyCol);
-}
-
-inline Color GetColor(Piece p)
-{
-    if ((p >= W_PAWN) && (p <= W_KING))
-      return WHITE;
-    if ((p >= B_PAWN) && (p <= B_KING))
-      return BLACK; 
-
-    return NO_COLOR;  
-}
+typedef uint64_t Bitboard;
 
 } // gee

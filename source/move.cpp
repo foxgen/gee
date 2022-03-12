@@ -43,7 +43,7 @@ std::string Move::to_string()
 
 Move& Move::from_string(const std::string &movestr, const Position& pos)
 {
-    // By default the move is NORMAL
+    // By default the move is NORMAL : e2e4
     m_from = StringToSquare(movestr);
     m_to = StringToSquare(movestr.substr(2));
     m_type = NORMAL;
@@ -86,7 +86,7 @@ Move& Move::from_string(const std::string &movestr, const Position& pos)
             m_castlingSide = QUEEN_SIDE;
     }
 
-    // PAWN go to passantSQ -> ENPASSANT
+    // PAWN destination is passantSQ -> ENPASSANT
     if (GetPieceType(pos.GetPiece(m_from)) == PAWN)
     {
         if (m_to == pos.m_passantSQ)

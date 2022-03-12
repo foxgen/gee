@@ -1,8 +1,7 @@
 #pragma once
 #include "types.h"
 #include "position.h"
-#include <iostream>
-#include <vector>
+
 
 namespace gee
 {

@@ -1,10 +1,9 @@
 #pragma once
-#include "types.h"
+
+#include "util.h"
 
 namespace gee
 {
-
-typedef uint64_t Bitboard;
 
 void BBSet(Bitboard& bb, Square sq);
 void BBClear(Bitboard& bb, Square sq);
